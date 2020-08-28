@@ -1,6 +1,5 @@
 package com.einschpanner.catchup.domain.blog.domain;
 
-import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
