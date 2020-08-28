@@ -1,26 +1,25 @@
 package com.einschpanner.catchup.domain.blog.domain;
 
-import com.einschpanner.catchup.common.models.BaseTimeEntity;
+import com.einschpanner.catchup.global.common.models.BaseTimeEntity;
 import com.einschpanner.catchup.domain.user.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = Blog.TABLE_NAME)
+@Table(name = "T_BLOG")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Blog extends BaseTimeEntity {
-    public static final String TABLE_NAME= "BLOG";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long blogId;
-
-    @ManyToOne
-    private User user;
+    private Long blogId;
 
     @Column(nullable = false)
     private String title;
@@ -38,6 +37,5 @@ public class Blog extends BaseTimeEntity {
     private String urlThumbnail;
 
     @Column
-    @ColumnDefault(value = "0")
-    private int cntLike = 0;
+    private int cntLike;
 }

@@ -1,26 +1,27 @@
 package com.einschpanner.catchup.domain.post.domain;
 
-import com.einschpanner.catchup.common.models.BaseTimeEntity;
+import com.einschpanner.catchup.domain.tag.domain.Tag;
+import com.einschpanner.catchup.global.common.models.BaseTimeEntity;
 import com.einschpanner.catchup.domain.user.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = Post.TABLE_NAME)
+@Table(name = "T_POST")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Post extends BaseTimeEntity {
-    public static final String TABLE_NAME= "POST";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long postId;
-
-    @ManyToOne
-    private User user;
+    private Long postId;
 
     @Column(nullable = false)
     private String title;
@@ -35,14 +36,20 @@ public class Post extends BaseTimeEntity {
     private String urlThumbnail;
 
     @Column
-    @ColumnDefault(value = "0")
-    private int cntLike = 0;
+    private int cntLike;
 
     @Column
-    @ColumnDefault(value = "0")
-    private int cntComment = 0;
+    private int cntComment;
 
-    @Column(columnDefinition="tinyint(1) default 0")
-    private boolean isDeleted = false;
+    @Column
+    private boolean isDeleted;
+
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @OneToMany
+    @JoinColumn(name = "tagId")
+    private List<Tag> tags;
 }
 

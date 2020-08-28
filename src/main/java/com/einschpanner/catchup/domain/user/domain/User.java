@@ -1,22 +1,27 @@
 package com.einschpanner.catchup.domain.user.domain;
 
-import com.einschpanner.catchup.common.models.BaseTimeEntity;
+import com.einschpanner.catchup.global.common.models.BaseTimeEntity;
+import com.einschpanner.catchup.domain.blog.domain.Blog;
+import com.einschpanner.catchup.domain.post.domain.Post;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = User.TABLE_NAME)
+@Table(name = "T_USER")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User extends BaseTimeEntity {
-    public static final String TABLE_NAME= "USER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
+    private Long userId;
 
     @Column(nullable = false, length = 30)
     private String nickname;
@@ -31,7 +36,7 @@ public class User extends BaseTimeEntity {
     private String urlProfile;
 
     @Column
-    private String addrRss; // ? addrRSS (rss가 약자)
+    private String addrRss;
 
     @Column
     private String addrGithub;
@@ -40,10 +45,12 @@ public class User extends BaseTimeEntity {
     private String addrBlog;
 
     @Column
-    @ColumnDefault(value = "0")
-    private int cntFollowing = 0;
+    private int cntFollowing;
 
     @Column
-    @ColumnDefault(value = "0")
-    private int cntFollower = 0;
+    private int cntFollower;
+
+    @OneToMany
+    @JoinColumn(name = "userId")
+    private List<Blog> blogs;
 }

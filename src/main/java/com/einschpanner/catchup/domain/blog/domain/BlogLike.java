@@ -1,7 +1,7 @@
-package com.einschpanner.catchup.domain.tag.domain;
+package com.einschpanner.catchup.domain.blog.domain;
 
-import com.einschpanner.catchup.global.common.models.BaseTimeEntity;
 import com.einschpanner.catchup.domain.post.domain.Post;
+import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,22 +10,23 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "T_TAG")
+@Table(name = "T_BLOG_LIKE")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tag extends BaseTimeEntity {
+public class BlogLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagId;
+    private Long blogLikeId;
 
     @ManyToOne
-    @JoinColumn(name = "postId")
-    private Post post;
+    @JoinColumn(name = "blogId")
+    private Blog blog;
 
-    @Column(nullable = false, length = 30)
-    private String tagName;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
 }
-
