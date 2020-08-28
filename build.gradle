@@ -4,7 +4,7 @@ plugins {
 	id 'org.asciidoctor.convert' version '1.5.8'
 	id 'java'
 	// QueryDSL
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+//	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.einschpanner'
@@ -26,24 +26,24 @@ ext {
 }
 
 // Start QueryDSL Settings
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-	jpa = true
-	querydslSourcesDir = querydslDir
-}
-
-sourceSets {
-	main.java.srcDir querydslDir
-}
-
-configurations {
-	querydsl.extendsFrom compileClasspath
-}
-
-compileQuerydsl {
-	options.annotationProcessorPath = configurations.querydsl
-}
+//def querydslDir = "$buildDir/generated/querydsl"
+//
+//querydsl {
+//	jpa = true
+//	querydslSourcesDir = querydslDir
+//}
+//
+//sourceSets {
+//	main.java.srcDir querydslDir
+//}
+//
+//configurations {
+//	querydsl.extendsFrom compileClasspath
+//}
+//
+//compileQuerydsl {
+//	options.annotationProcessorPath = configurations.querydsl
+//}
 // End QueryDSL
 
 dependencies {
@@ -62,7 +62,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 
 	// QueryDSL
-	implementation 'com.querydsl:querydsl-jpa'
+//	implementation 'com.querydsl:querydsl-jpa'
 
 	// ModelMapper
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
