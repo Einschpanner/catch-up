@@ -3,6 +3,7 @@ pipeline {
   stages {
     stage('build') {
       steps {
+        echo 'start build..'
         sh './gradlew build'
       }
     }
@@ -10,6 +11,7 @@ pipeline {
     stage('deploy') {
     when { branch 'develop' }
       steps {
+        echo 'start deploy to develop..'
         sh 'eb deploy'
       }
     }
