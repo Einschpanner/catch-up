@@ -18,15 +18,12 @@ pipeline {
 
   post {
           success {
-              # 빌드의 결과가 성공일경우
               resultSlackSend("good", "SUCCESS")
           }
           failure {
-              # 빌드의 결과가 실패일경우
               resultSlackSend("danger", "FAILURE")
           }
           aborted {
-              # 빌드를 중간에 멈추는 경우
               resultSlackSend("warning", "ABORTED")
           }
       }
