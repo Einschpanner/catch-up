@@ -52,4 +52,19 @@ public class User extends BaseTimeEntity {
     @OneToMany
     @JoinColumn(name = "userId")
     private List<Blog> blogs;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    public String getRolekey() {
+        return this.role.getKey();
+    }
+
+    public User update(String nickname, String picture) {
+        this.nickname = nickname;
+        this.urlProfile = picture;
+
+        return this;
+    }
 }
