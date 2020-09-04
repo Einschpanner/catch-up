@@ -11,7 +11,7 @@ pipeline {
     stage('deploy') {
     when { branch 'develop' }
       steps {
-        echo 'start deploy to develop..'
+        echo 'start deploy to develop..!'
         sh 'eb deploy'
       }
     }
