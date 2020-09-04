@@ -12,7 +12,7 @@ pipeline {
     when { branch 'develop' }
       steps {
         echo 'start deploy to develop..'
-        sh 'eb deploy'
+        sh 'eb deploy catch-up-dev'
       }
     }
 
