@@ -49,21 +49,25 @@ public class User extends BaseTimeEntity {
     @Column
     private int cntFollower;
 
-    @OneToMany
-    @JoinColumn(name = "userId")
-    private List<Blog> blogs;
+    @Column
+    private String provider;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
+    @OneToMany
+    @JoinColumn(name = "userId")
+    private List<Blog> blogs;
+
     public String getRolekey() {
         return this.role.getKey();
     }
 
-    public User update(String nickname, String picture) {
+    public User update(String nickname, String picture, String providerId) {
         this.nickname = nickname;
         this.urlProfile = picture;
+        this.provider = providerId;
 
         return this;
     }

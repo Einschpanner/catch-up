@@ -4,36 +4,40 @@ import com.einschpanner.catchup.domain.user.domain.Role;
 import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
+
 import java.util.Map;
 
 @Getter
-public class OAuthAttributes {
+public class OAuth2Dto {
     private Map<String, Object> attributes;
     private String nameAttributeKey;
     private String name;
     private String email;
     private String picture;
+    private String providerId;
 
     @Builder
-    public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String nickname, String email, String picture) {
+    public OAuth2Dto(Map<String, Object> attributes, String nameAttributeKey, String nickname, String email, String picture, String providerId) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.name = nickname;
         this.email = email;
         this.picture = picture;
+        this.providerId = providerId;
     }
 
-    public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
-        return ofGoogle(userNameAttributeName, attributes);
+    public static OAuth2Dto of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+        return ofGoogle(registrationId, userNameAttributeName, attributes);
     }
 
-    private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
-        return OAuthAttributes.builder()
+    private static OAuth2Dto ofGoogle(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+        return OAuth2Dto.builder()
                 .nickname((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
                 .picture((String) attributes.get("picture"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
+                .providerId(registrationId)
                 .build();
     }
 
@@ -42,7 +46,8 @@ public class OAuthAttributes {
                 .nickname(name)
                 .email(email)
                 .urlProfile(picture)
-                .role(Role.GUEST)
+                .role(Role.USER)
+                .provider(providerId)
                 .build();
     }
 }

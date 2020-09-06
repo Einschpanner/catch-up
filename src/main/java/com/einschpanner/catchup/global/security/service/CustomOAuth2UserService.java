@@ -1,8 +1,8 @@
-package com.einschpanner.catchup.global.security.dao;
+package com.einschpanner.catchup.global.security.service;
 
 import com.einschpanner.catchup.domain.user.dao.UserRepository;
 import com.einschpanner.catchup.domain.user.domain.User;
-import com.einschpanner.catchup.global.security.dto.OAuthAttributes;
+import com.einschpanner.catchup.global.security.dto.OAuth2Dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -23,14 +23,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService delegate = new DefaultOAuth2UserService();
-
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
-        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        OAuth2Dto attributes = OAuth2Dto.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
         User user = saveOrUpdate(attributes);
 
         return new DefaultOAuth2User(
@@ -38,9 +37,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 attributes.getAttributes(), attributes.getNameAttributeKey());
     }
 
-    private User saveOrUpdate(OAuthAttributes attributes) {
+    private User saveOrUpdate(OAuth2Dto attributes) {
         User user = userRepository.findByEmail(attributes.getEmail())
-                .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
+                .map(entity -> entity.update(attributes.getName(), attributes.getPicture(), attributes.getProviderId()))
                 .orElse(attributes.toEntity());
         return userRepository.save(user);
     }
