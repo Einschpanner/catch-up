@@ -1,7 +1,7 @@
 package com.einschpanner.catchup.domain.user.domain;
 
 import com.einschpanner.catchup.domain.blog.domain.Blog;
-import com.einschpanner.catchup.global.common.models.BaseTimeEntity;
+import com.einschpanner.catchup.global.model.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

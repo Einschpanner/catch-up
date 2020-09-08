@@ -65,9 +65,9 @@ dependencies {
 //	implementation 'com.querydsl:querydsl-jpa'
 
 	// ModelMapper
-	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
+	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
 
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+	implementation ('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.batch:spring-batch-test'
