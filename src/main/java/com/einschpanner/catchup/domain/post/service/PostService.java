@@ -9,6 +9,7 @@ import com.einschpanner.catchup.domain.post.repository.PostRepository;
 import com.einschpanner.catchup.global.error.ErrorCode;
 import com.einschpanner.catchup.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-//    private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     /**
      * Post 생성
@@ -26,7 +27,7 @@ public class PostService {
      */
     public Post save(PostCreateRequest postCreateRequest) {
         System.out.println(postCreateRequest.toString());
-        //        Post post = modelMapper.map(postCreateRequest, Post.class);
+//        Post post = modelMapper.map(postCreateRequest, Post.class);
 //        System.out.println(post.toString());
 
         Post post = postCreateRequest.toEntity();
@@ -59,9 +60,6 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
         post.updateMyPost(postUpdateRequest);
-
-//        or
-//        Post post = postUpdateRequest.toEntity(postId);
         return postRepository.save(post);
     }
 
