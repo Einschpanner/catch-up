@@ -10,10 +10,9 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(405, "C002", "Method Not Allowed"),
     HANDLE_ACCESS_DENIED(403, "C003", "Access is Denied"),
     INTERNAL_SERVER_ERROR(500, "C004", "Interval Server Error"),
+    ENTITY_NOT_FOUND(400, "C005", "Entity Not Found"),
 
-    // Ex) Member
-    EMAIL_DUPLICATION(400, "M001", "Email is Duplication"),
-    LOGIN_INPUT_INVALID(400, "M002", "Login input is invalid"),
+    // Ex) Post
     ;
 
     private final String code;

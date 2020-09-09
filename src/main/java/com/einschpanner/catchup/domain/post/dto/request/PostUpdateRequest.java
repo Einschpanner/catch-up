@@ -1,27 +1,29 @@
 package com.einschpanner.catchup.domain.post.dto.request;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
-import lombok.*;
+import lombok.Getter;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
-public class PostCreateRequest {
+public class PostUpdateRequest {
 
     private String title;
     private String description;
     private String email;
     private String urlThumbnail;
+    private int cntComment;
+    private int cntLike;
+    private boolean isDeleted;
 
-    public Post toEntity() {
+    public Post toEntity(Long postId) {
         return Post.builder()
+                .postId(postId)
                 .title(title)
                 .description(description)
                 .email(email)
                 .urlThumbnail(urlThumbnail)
-                .cntComment(0)
-                .cntLike(0)
-                .isDeleted(false)
+                .cntComment(cntComment)
+                .cntLike(cntLike)
+                .isDeleted(isDeleted)
                 .build();
     }
 }
