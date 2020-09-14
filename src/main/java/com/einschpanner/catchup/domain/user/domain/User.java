@@ -49,8 +49,9 @@ public class User extends BaseTimeEntity {
     @Column
     private int cntFollower;
 
+    @Enumerated(EnumType.STRING)
     @Column
-    private String provider;
+    private AuthProvider provider;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -64,7 +65,7 @@ public class User extends BaseTimeEntity {
         return this.role.getKey();
     }
 
-    public User update(String nickname, String picture, String providerId) {
+    public User update(String nickname, String picture, AuthProvider providerId) {
         this.nickname = nickname;
         this.urlProfile = picture;
         this.provider = providerId;

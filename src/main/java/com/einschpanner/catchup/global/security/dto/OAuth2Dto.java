@@ -1,5 +1,6 @@
 package com.einschpanner.catchup.global.security.dto;
 
+import com.einschpanner.catchup.domain.user.domain.AuthProvider;
 import com.einschpanner.catchup.domain.user.domain.Role;
 import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.Builder;
@@ -14,10 +15,10 @@ public class OAuth2Dto {
     private String name;
     private String email;
     private String picture;
-    private String providerId;
+    private AuthProvider providerId;
 
     @Builder
-    public OAuth2Dto(Map<String, Object> attributes, String nameAttributeKey, String nickname, String email, String picture, String providerId) {
+    public OAuth2Dto(Map<String, Object> attributes, String nameAttributeKey, String nickname, String email, String picture, AuthProvider providerId) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.name = nickname;
@@ -27,17 +28,19 @@ public class OAuth2Dto {
     }
 
     public static OAuth2Dto of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
-        return ofGoogle(registrationId, userNameAttributeName, attributes);
+        if (registrationId.equals(AuthProvider.google.toString()))
+            return ofGoogle(AuthProvider.google, userNameAttributeName, attributes);
+        return OAuth2Dto.builder().build();
     }
 
-    private static OAuth2Dto ofGoogle(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+    private static OAuth2Dto ofGoogle(AuthProvider providerId, String userNameAttributeName, Map<String, Object> attributes) {
         return OAuth2Dto.builder()
                 .nickname((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
                 .picture((String) attributes.get("picture"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
-                .providerId(registrationId)
+                .providerId(providerId)
                 .build();
     }
 
