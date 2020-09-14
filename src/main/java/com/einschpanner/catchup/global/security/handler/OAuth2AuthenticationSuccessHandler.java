@@ -29,8 +29,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         response.addHeader("X-Auth-Token", "Bearer  " + token);
         logger.info("X-Auth-Token : " + response.getHeader("X-Auth-Token"));
-
-        redirectStrategy.sendRedirect(request, response, "/auth");
     }
 
 
