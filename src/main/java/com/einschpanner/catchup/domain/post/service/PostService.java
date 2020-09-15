@@ -1,9 +1,7 @@
 package com.einschpanner.catchup.domain.post.service;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
-import com.einschpanner.catchup.domain.post.dto.request.PostCreateRequest;
-import com.einschpanner.catchup.domain.post.dto.request.PostUpdateRequest;
-import com.einschpanner.catchup.domain.post.dto.response.PostResponse;
+import com.einschpanner.catchup.domain.post.dto.PostDto;
 import com.einschpanner.catchup.domain.post.exception.PostNotFoundException;
 import com.einschpanner.catchup.domain.post.repository.PostRepository;
 import com.einschpanner.catchup.global.error.ErrorCode;
@@ -25,23 +23,20 @@ public class PostService {
      * Post 생성
      * TODO : 사용자 추가하기
      */
-    public Post save(PostCreateRequest postCreateRequest) {
-        System.out.println(postCreateRequest.toString());
-//        Post post = modelMapper.map(postCreateRequest, Post.class);
-//        System.out.println(post.toString());
+    public Post save(PostDto.CreateRequest dto) {
+        Post post = modelMapper.map(dto, Post.class);
 
-        Post post = postCreateRequest.toEntity();
         return postRepository.save(post);
     }
 
     /**
      * Post List 모두 조회
      */
-    public List<PostResponse> findAll() {
+    public List<PostDto.Response> findAll() {
         List<Post> postList = postRepository.findAll();
 
         return postList.stream()
-                .map(PostResponse::new)
+                .map(PostDto.Response::new)
                 .collect(Collectors.toList());
     }
 
@@ -56,10 +51,10 @@ public class PostService {
     /**
      * 특정 Post 1개 수정하기
      */
-    public Post update(Long postId, PostUpdateRequest postUpdateRequest) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND));
-        post.updateMyPost(postUpdateRequest);
+    public Post update(Long postId, PostDto.UpdateRequest dto) {
+        Post post = this.findById(postId);
+        post.updateMyPost(dto);
+
         return postRepository.save(post);
     }
 
@@ -67,6 +62,7 @@ public class PostService {
      * 특정 Post 1개 삭제하기
      */
     public void delete(Long postId) {
+        this.findById(postId);
         postRepository.deleteById(postId);
     }
 }

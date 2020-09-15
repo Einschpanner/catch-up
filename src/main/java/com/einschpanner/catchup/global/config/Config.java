@@ -13,8 +13,12 @@ public class Config {
     public ModelMapper modelMapper(){
         ModelMapper modelMapper = new ModelMapper();
 
-        /*연결 전략 : 같은 타입의 필드명이 같은 경우만 동작*/
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        /* 연결 전략 : 같은 타입의 필드명이 같은 경우만 동작*/
+        modelMapper.getConfiguration()
+                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
+                .setFieldMatchingEnabled(true)
+                .setMatchingStrategy(MatchingStrategies.STRICT);
+
         return modelMapper;
     }
 }
