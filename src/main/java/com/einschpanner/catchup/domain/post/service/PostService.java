@@ -21,7 +21,6 @@ public class PostService {
 
     /**
      * Post 생성
-     * TODO : 사용자 추가하기
      */
     public Post save(PostDto.CreateRequest dto) {
         Post post = modelMapper.map(dto, Post.class);
@@ -45,7 +44,7 @@ public class PostService {
      */
     public Post findById(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId + " 포스트를 찾을 수 없습니다."));
+                .orElseThrow(PostNotFoundException::new);
     }
 
     /**

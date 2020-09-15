@@ -2,18 +2,23 @@ package com.einschpanner.catchup.domain.post.controller;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
+import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
 import com.einschpanner.catchup.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+
+    // TEST QueryDSL
+    private final PostQueryRepository postQueryRepository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -55,5 +60,17 @@ public class PostController {
             @PathVariable final Long id
     ){
         postService.delete(id);
+    }
+
+    // TEST QueryDSL
+    @GetMapping("/queryDSL")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostDto.Response> findPostByTitle(
+            @RequestParam final String title
+    ){
+        List<Post> postList = postQueryRepository.findByTitle(title);
+        return postList.stream()
+                .map(PostDto.Response::new)
+                .collect(Collectors.toList());
     }
 }

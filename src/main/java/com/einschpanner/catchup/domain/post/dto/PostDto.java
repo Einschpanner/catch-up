@@ -1,16 +1,14 @@
 package com.einschpanner.catchup.domain.post.dto;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 public class PostDto {
 
     @Getter
     @Setter
     @NoArgsConstructor
+    @ToString
     public static class CreateRequest {
 
         private String title;
