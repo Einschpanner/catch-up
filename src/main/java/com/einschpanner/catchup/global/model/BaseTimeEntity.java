@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.global.common.models;
+package com.einschpanner.catchup.global.model;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

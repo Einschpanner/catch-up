@@ -1,12 +1,10 @@
 package com.einschpanner.catchup.domain.post.domain;
 
+import com.einschpanner.catchup.domain.post.dto.PostDto;
 import com.einschpanner.catchup.domain.tag.domain.Tag;
 import com.einschpanner.catchup.domain.user.domain.User;
-import com.einschpanner.catchup.global.common.models.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.einschpanner.catchup.global.model.BaseTimeEntity;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Post extends BaseTimeEntity {
 
     @Id
@@ -51,5 +50,20 @@ public class Post extends BaseTimeEntity {
     @OneToMany
     @JoinColumn(name = "tagId")
     private List<Tag> tags;
+
+    /**
+     * Update Dto to Post
+     * @param dto
+     */
+    public void updateMyPost(PostDto.UpdateRequest dto) {
+        this.title = dto.getTitle();
+        this.description = dto.getDescription();
+        this.email = dto.getEmail();
+        this.urlThumbnail = dto.getUrlThumbnail();
+        this.cntLike = dto.getCntLike();
+        this.cntComment = dto.getCntComment();
+        this.isDeleted = dto.isDeleted();
+    }
+
 }
 

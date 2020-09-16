@@ -4,7 +4,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show-sql: false
@@ -14,7 +14,7 @@ spring:
     url: jdbc:mysql://ec2-13-209-26-139.ap-northeast-2.compute.amazonaws.com:3306/catchup-dev?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnection=true
     username: root
     password: catchup!@
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   security:
     user:
