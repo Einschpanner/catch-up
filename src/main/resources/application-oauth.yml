@@ -1,0 +1,16 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1052757920126-gp0r2q8ehhkfu4pkcoftis1gnod918vt.apps.googleusercontent.com
+            client-secret: l9Gt0v2QEQX2c15VXBOL6i4b
+            scope:
+              - profile
+              - email
+              -
+jwt:
+  auth:
+    tokenSecret: yhF8TN9xYzBrtaPqD8NWt6HLBMBqx6wG
+    tokenExpirationMsec: 864000000

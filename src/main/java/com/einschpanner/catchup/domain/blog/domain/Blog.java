@@ -1,12 +1,13 @@
 package com.einschpanner.catchup.domain.blog.domain;
 
-import com.einschpanner.catchup.global.model.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "T_BLOG")
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Blog extends BaseTimeEntity {
+public class Blog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +38,7 @@ public class Blog extends BaseTimeEntity {
 
     @Column
     private int cntLike;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
 }
