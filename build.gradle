@@ -89,7 +89,7 @@ test {
 
 // Spring REST docs setting
 asciidoctor {
-	inputs.dir snippetsDir
+//	inputs.dir snippetsDir
 	dependsOn test
 }
 
