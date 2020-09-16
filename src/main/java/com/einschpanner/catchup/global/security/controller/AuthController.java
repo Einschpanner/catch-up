@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/auth")
-public class TestController {
+public class AuthController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public String checkAuth(
