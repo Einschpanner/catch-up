@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping(value = "/posts")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
@@ -21,17 +21,17 @@ public class PostController {
     private final PostQueryRepository postQueryRepository;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public PostDto.Response savePost(
             @RequestBody PostDto.CreateRequest dto
-    ){
+    ) {
         Post post = postService.save(dto);
         return new PostDto.Response(post);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PostDto.Response> findAllPosts(){
+    public List<PostDto.Response> findAllPosts() {
         return postService.findAll();
     }
 
@@ -39,7 +39,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public PostDto.Response findPost(
             @PathVariable final Long id
-    ){
+    ) {
         Post post = postService.findById(id);
         return new PostDto.Response(post);
     }
@@ -49,7 +49,7 @@ public class PostController {
     public PostDto.Response updatePost(
             @PathVariable final Long id,
             @RequestBody PostDto.UpdateRequest dto
-    ){
+    ) {
         Post post = postService.update(id, dto);
         return new PostDto.Response(post);
     }
@@ -58,7 +58,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public void deletePost(
             @PathVariable final Long id
-    ){
+    ) {
         postService.delete(id);
     }
 
@@ -67,7 +67,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public List<PostDto.Response> findPostByTitle(
             @RequestParam final String title
-    ){
+    ) {
         List<Post> postList = postQueryRepository.findByTitle(title);
         return postList.stream()
                 .map(PostDto.Response::new)
