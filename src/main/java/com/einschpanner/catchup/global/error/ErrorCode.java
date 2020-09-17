@@ -12,7 +12,15 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(500, "C004", "Interval Server Error"),
     ENTITY_NOT_FOUND(400, "C005", "Entity Not Found"),
 
-    // Ex) Post
+    // USER
+    USER_NOT_FOUND(404, "U001", "사용자를 찾을 수 없습니다."),
+
+    // POST
+    POST_NOT_FOUND(404, "P001", "게시글을 찾을 수 없습니다."),
+
+    // POSTLIKE
+    POST_LIKE_DUPLICATED(400, "PL001", "이미 게시글에 좋아요를 한 사용자입니다."),
+    POST_LIKE__NOT_FOUND(404, "PL002", "게시글의 좋아요를 찾을 수 없습니다."),
     ;
 
     private final String code;

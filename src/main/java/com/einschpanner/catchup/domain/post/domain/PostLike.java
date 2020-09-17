@@ -1,15 +1,14 @@
 package com.einschpanner.catchup.domain.post.domain;
 
 import com.einschpanner.catchup.domain.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "T_POST_LIKE")
+@Table(name = "T_POST_LIKE", uniqueConstraints={
+        @UniqueConstraint(columnNames = {"postId", "userId"})
+})
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,4 +26,18 @@ public class PostLike {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    // 1안
+    public PostLike(Post post, User user){
+        this.post = post;
+        this.user = user;
+    }
+
+    // 2안
+    public static PostLike of(Post post, User user){
+        return PostLike.builder()
+                .post(post)
+                .user(user)
+                .build();
+    }
 }

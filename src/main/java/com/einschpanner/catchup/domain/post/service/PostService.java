@@ -20,7 +20,7 @@ public class PostService {
     private final ModelMapper modelMapper;
 
     /**
-     * Post 생성
+     * 게시글 생성
      */
     public Post save(PostDto.CreateRequest dto) {
         Post post = modelMapper.map(dto, Post.class);
@@ -29,7 +29,7 @@ public class PostService {
     }
 
     /**
-     * Post List 모두 조회
+     * 게시글 List 모두 조회
      */
     public List<PostDto.Response> findAll() {
         List<Post> postList = postRepository.findAll();
@@ -40,7 +40,7 @@ public class PostService {
     }
 
     /**
-     * 특정 Post 1개 조회
+     * 특정 게시글 1개 조회
      */
     public Post findById(Long postId) {
         return postRepository.findById(postId)
@@ -48,7 +48,7 @@ public class PostService {
     }
 
     /**
-     * 특정 Post 1개 수정하기
+     * 특정 게시글 1개 수정하기
      */
     public Post update(Long postId, PostDto.UpdateRequest dto) {
         Post post = this.findById(postId);
@@ -58,7 +58,7 @@ public class PostService {
     }
 
     /**
-     * 특정 Post 1개 삭제하기
+     * 특정 게시글 1개 삭제하기
      */
     public void delete(Long postId) {
         this.findById(postId);
