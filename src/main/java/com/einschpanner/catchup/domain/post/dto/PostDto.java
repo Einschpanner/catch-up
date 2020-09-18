@@ -35,6 +35,8 @@ public class PostDto {
     @Setter
     @NoArgsConstructor
     @ToString
+    @Builder
+    @AllArgsConstructor
     public static class Response {
 
         private String title;

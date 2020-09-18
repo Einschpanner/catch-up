@@ -1,11 +1,14 @@
 package com.einschpanner.catchup.domain.post.controller;
 
+import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -15,14 +18,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class PostControllerTest extends ApiDocumentationTest {
 
+
     @Test
     void savePost() throws Exception {
+
         // Given
         PostDto.CreateRequest postDto = new PostDto.CreateRequest();
         postDto.setDescription("test description");
         postDto.setEmail("test@naver.com");
         postDto.setTitle("Test Title");
         postDto.setUrlThumbnail("Test Thumbnail");
+        Post post1 = this.modelMapper.map(postDto, Post.class);
+        given(postService.save(any(PostDto.CreateRequest.class)))
+                .willReturn(post1);
 
         // When & Then
         mockMvc.perform(post("/posts")
