@@ -65,5 +65,8 @@ public class Post extends BaseTimeEntity {
         this.isDeleted = dto.isDeleted();
     }
 
+    public void plusCommentCnt() {
+        this.cntComment++;
+    }
 }
 
