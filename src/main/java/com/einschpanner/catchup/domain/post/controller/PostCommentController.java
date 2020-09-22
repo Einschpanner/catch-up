@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/posts/comments")
+@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostCommentController {
 
@@ -20,7 +20,7 @@ public class PostCommentController {
     /*
     댓글/대댓 등록
      */
-    @PostMapping
+    @PostMapping("/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public void savePostComment(
             @RequestBody final PostCommentDto.Req req
@@ -32,7 +32,7 @@ public class PostCommentController {
     /*
     post에 대한 댓글 리스트 조회
      */
-    @GetMapping("/{post_id}")
+    @GetMapping("/{post_id}/comments")
     @ResponseStatus(HttpStatus.OK)
     public List<PostCommentDto.Res> getPostCommentList(
             @PathVariable final long post_id
@@ -46,7 +46,7 @@ public class PostCommentController {
     /*
     대댓글 조회
      */
-    @GetMapping("/reply/{comment_id}")
+    @GetMapping("/comments/replies/{comment_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<PostCommentDto.Res> getPostCommentReplyList(
             @PathVariable final long comment_id
@@ -60,17 +60,12 @@ public class PostCommentController {
     /*
     댓글 삭제
      */
-    @DeleteMapping("/{comment_id}")
+    @DeleteMapping("/comments/{comment_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePostComment(
             @PathVariable final long comment_id
     ) {
         postCommentService.deletePostComment(comment_id);
     }
-
-
-    /*
-    댓글 수정(선택사항)
-     */
 
 }
