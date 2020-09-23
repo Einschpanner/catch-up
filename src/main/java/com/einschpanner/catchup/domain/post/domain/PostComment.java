@@ -2,6 +2,7 @@ package com.einschpanner.catchup.domain.post.domain;
 
 import com.einschpanner.catchup.domain.post.dto.PostCommentDto;
 import com.einschpanner.catchup.global.model.BaseTimeEntity;
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,10 +19,12 @@ public class PostComment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private String email;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private String contents;
 
     @Column

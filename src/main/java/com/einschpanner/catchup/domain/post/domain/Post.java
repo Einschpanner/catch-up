@@ -68,5 +68,9 @@ public class Post extends BaseTimeEntity {
     public void plusCommentCnt() {
         this.cntComment++;
     }
+
+    public void minusCommentCnt() {
+        this.cntComment--;
+    }
 }
 

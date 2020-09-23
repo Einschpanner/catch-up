@@ -46,7 +46,7 @@ public class PostCommentController {
     /*
     대댓글 조회
      */
-    @GetMapping("/comments/replies/{comment_id}")
+    @GetMapping("/comments/{comment_id}/replies")
     @ResponseStatus(HttpStatus.OK)
     public List<PostCommentDto.Res> getPostCommentReplyList(
             @PathVariable final long comment_id

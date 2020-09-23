@@ -9,19 +9,13 @@ public class PostCommentDto {
     @Getter
     @ToString
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Builder
     public static class Req {
-        private Long post_id;
-        private Long parents_id;
+        private Long postId;
+        private Long parentsId;
         private String email;
         private String contents;
-
-        @Builder
-        public Req(Long post_id, Long parents_id, String email, String contents) {
-            this.post_id = post_id;
-            this.parents_id = parents_id;
-            this.email = email;
-            this.contents = contents;
-        }
     }
 
     @Getter

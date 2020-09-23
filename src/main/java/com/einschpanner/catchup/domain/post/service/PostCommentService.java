@@ -26,10 +26,10 @@ public class PostCommentService {
 
     @Transactional
     public PostComment savePostComment(PostCommentDto.Req req) {
-        Post post = this.postRepository.findById(req.getPost_id()).orElseThrow(PostNotFoundException::new);
+        Post post = this.postRepository.findById(req.getPostId()).orElseThrow(PostNotFoundException::new);
         PostComment parents = null;
-        if (req.getParents_id() != null)
-            parents = this.postCommentRepository.findById(req.getParents_id()).orElseThrow(PostCommentNotFoundException::new);
+        if (req.getParentsId() != null)
+            parents = this.postCommentRepository.findById(req.getParentsId()).orElseThrow(PostCommentNotFoundException::new);
         // 머지하 충돌날 익셉션 usernotfoundException
         this.userRepository.findByEmail(req.getEmail()).orElseThrow(UserNotFoundException::new);
 
@@ -54,5 +54,6 @@ public class PostCommentService {
     public void deletePostComment(Long comment_id) {
         PostComment postComment = this.postCommentRepository.findById(comment_id).orElseThrow(PostCommentNotFoundException::new);
         postComment.setDeleted(Boolean.TRUE);
+        postComment.getPost().minusCommentCnt();
     }
 }
