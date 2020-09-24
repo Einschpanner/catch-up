@@ -7,13 +7,13 @@ pipeline {
       }
       post {
         success {
-            resultSlackSend("good", "SUCCESS")
+            resultSlackSend("CI:Build", "good", "SUCCESS")
         }
         failure {
-            resultSlackSend("danger", "FAILURE")
+            resultSlackSend("CI:Build", "danger", "FAILURE")
         }
         aborted {
-            resultSlackSend("warning", "ABORTED")
+            resultSlackSend("CI:Build", "warning", "ABORTED")
         }
       }
     }
@@ -26,19 +26,19 @@ pipeline {
       }
       post {
         success {
-            resultSlackSend("good", "SUCCESS")
+            resultSlackSend("CD:Deploy", "good", "SUCCESS")
         }
         failure {
-            resultSlackSend("danger", "FAILURE")
+            resultSlackSend("CD:Deploy", "danger", "FAILURE")
         }
         aborted {
-            resultSlackSend("warning", "ABORTED")
+            resultSlackSend("CD:Deploy", "warning", "ABORTED")
         }
       }
     }
   }
 }
 
-def resultSlackSend(bar_color, result) {
-  slackSend color: bar_color, message:"${env.JOB_NAME} - #${env.BUILD_NUMBER} ${result} after ${currentBuild.durationString.split(" and")[0]} (<${env.BUILD_URL}|Open>)"
+def resultSlackSend(stage_name ,bar_color, result) {
+  slackSend color: bar_color, message:"${env.JOB_NAME} - ${stage_name} #${env.BUILD_NUMBER}  ${result} after ${currentBuild.durationString.split(" and")[0]} (<${env.BUILD_URL}|Open>)"
 }
