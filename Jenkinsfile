@@ -2,7 +2,9 @@ pipeline {
   agent any
   stages {
     stage('clone'){
-        checkout scm
+        steps {
+            checkout scm
+        }
     }
 
     stage('build') {
