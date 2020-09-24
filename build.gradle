@@ -64,6 +64,7 @@ ext {
 }
 
 test {
+	println '========================!!!!!!!!!!!!!!'
 	outputs.dir snippetsDir
 	useJUnitPlatform()
 	testLogging {
