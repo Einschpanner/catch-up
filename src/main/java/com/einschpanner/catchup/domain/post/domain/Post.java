@@ -41,6 +41,7 @@ public class Post extends BaseTimeEntity {
     private int cntComment;
 
     @Column
+    @Setter
     private boolean isDeleted;
 
     @ManyToOne
@@ -55,7 +56,7 @@ public class Post extends BaseTimeEntity {
      * Update Dto to Post
      * @param dto
      */
-    public void updateMyPost(PostDto.UpdateRequest dto) {
+    public void updateMyPost(PostDto.UpdateReq dto) {
         this.title = dto.getTitle();
         this.description = dto.getDescription();
         this.email = dto.getEmail();
@@ -72,5 +73,13 @@ public class Post extends BaseTimeEntity {
     public void minusCommentCnt() {
         this.cntComment--;
     }
+    public void plusLikeCnt() {
+        this.cntLike++;
+    }
+
+    public void minusLikeCnt() {
+        this.cntLike--;
+    }
+
 }
 

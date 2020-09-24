@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.global.config;
+package com.einschpanner.catchup.global.configs;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.modelmapper.ModelMapper;
@@ -37,4 +37,5 @@ public class Config {
 
         return modelMapper;
     }
+
 }

@@ -8,8 +8,7 @@ public class PostDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    @ToString
-    public static class CreateRequest {
+    public static class CreateReq {
 
         private String title;
         private String description;
@@ -20,7 +19,7 @@ public class PostDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class UpdateRequest {
+    public static class UpdateReq {
 
         private String title;
         private String description;
@@ -32,8 +31,9 @@ public class PostDto {
     }
 
     @Getter
-    public static class Response {
+    public static class Res {
 
+        private Long id;
         private String title;
         private String description;
         private String email;
@@ -41,7 +41,8 @@ public class PostDto {
         private int cntLike;
         private int cntComment;
 
-        public Response(Post post){
+        public Res(Post post){
+            this.id = post.getPostId();
             this.title = post.getTitle();
             this.description = post.getDescription();
             this.email = post.getEmail();
