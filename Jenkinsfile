@@ -1,13 +1,17 @@
 pipeline {
   agent any
   stages {
+    stage('clone'){
+        checkout scm
+    }
+
     stage('build') {
       steps {
         sh './gradlew clean build'
       }
       post {
         success {
-            resultSlackSend("good", "SUCCESS")x
+            resultSlackSend("good", "SUCCESS")
         }
         failure {
             resultSlackSend("danger", "FAILURE")
@@ -26,7 +30,7 @@ pipeline {
       }
       post {
         success {
-            resultSlackSend("good", "SUCCESS")x
+            resultSlackSend("good", "SUCCESS")
         }
         failure {
             resultSlackSend("danger", "FAILURE")
