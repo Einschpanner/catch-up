@@ -9,7 +9,6 @@ spring:
             scope:
               - profile
               - email
-              -
 jwt:
   auth:
     tokenSecret: yhF8TN9xYzBrtaPqD8NWt6HLBMBqx6wG
