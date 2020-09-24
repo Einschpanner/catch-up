@@ -23,13 +23,13 @@ class PostControllerTest extends ApiDocumentationTest {
     void savePost() throws Exception {
 
         // Given
-        PostDto.CreateRequest postDto = new PostDto.CreateRequest();
+        PostDto.CreateReq postDto = new PostDto.CreateReq();
         postDto.setDescription("test description");
         postDto.setEmail("test@naver.com");
         postDto.setTitle("Test Title");
         postDto.setUrlThumbnail("Test Thumbnail");
         Post post1 = this.modelMapper.map(postDto, Post.class);
-        given(postService.save(any(PostDto.CreateRequest.class)))
+        given(postService.save(any(PostDto.CreateReq.class)))
                 .willReturn(post1);
 
         // When & Then
