@@ -26,33 +26,35 @@ public class PostCommentService {
 
     @Transactional
     public PostComment savePostComment(PostCommentDto.Req req) {
-        Post post = this.postRepository.findById(req.getPostId()).orElseThrow(PostNotFoundException::new);
+        Post post = postRepository.findById(req.getPostId()).orElseThrow(PostNotFoundException::new);
         PostComment parents = null;
         if (req.getParentsId() != null)
-            parents = this.postCommentRepository.findById(req.getParentsId()).orElseThrow(PostCommentNotFoundException::new);
+            parents = postCommentRepository.findById(req.getParentsId()).orElseThrow(PostCommentNotFoundException::new);
         // 머지하 충돌날 익셉션 usernotfoundException
-        this.userRepository.findByEmail(req.getEmail()).orElseThrow(UserNotFoundException::new);
+        userRepository.findByEmail(req.getEmail()).orElseThrow(UserNotFoundException::new);
 
         return postCommentRepository.save(new PostComment(req, post, parents));
     }
 
     @Transactional
     public List<PostComment> getPostCommentList(Long post_id) {
-        this.postRepository.findById(post_id).orElseThrow(PostNotFoundException::new);
-        List<PostComment> PostCommentList = this.postQueryRepository.findAllByPostAndParents(post_id, null);
+        postRepository.findById(post_id).orElseThrow(PostNotFoundException::new);
+        List<PostComment> PostCommentList = postQueryRepository.findAllByPostAndParents(post_id, null);
         return PostCommentList;
     }
 
     @Transactional
     public List<PostComment> getPostCommentReplyList(Long comment_id) {
-        PostComment postComment = this.postCommentRepository.findById(comment_id).orElseThrow(PostCommentNotFoundException::new);
-        List<PostComment> PostCommentReplyList = this.postQueryRepository.findAllByPostAndParents(postComment.getPost().getPostId(), comment_id);
+        PostComment postComment = postCommentRepository.findById(comment_id)
+                .orElseThrow(PostCommentNotFoundException::new);
+        List<PostComment> PostCommentReplyList = postQueryRepository.findAllByPostAndParents(postComment.getPost().getPostId(), comment_id);
         return PostCommentReplyList;
     }
 
     @Transactional
     public void deletePostComment(Long comment_id) {
-        PostComment postComment = this.postCommentRepository.findById(comment_id).orElseThrow(PostCommentNotFoundException::new);
+        PostComment postComment = postCommentRepository.findById(comment_id)
+                .orElseThrow(PostCommentNotFoundException::new);
         postComment.setDeleted(Boolean.TRUE);
         postComment.getPost().minusCommentCnt();
     }

@@ -32,12 +32,12 @@ public class PostCommentController {
     /*
     post에 대한 댓글 리스트 조회
      */
-    @GetMapping("/{post_id}/comments")
+    @GetMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
     public List<PostCommentDto.Res> getPostCommentList(
-            @PathVariable final long post_id
+            @PathVariable final long postId
     ) {
-        List<PostComment> postCommentList = postCommentService.getPostCommentList(post_id);
+        List<PostComment> postCommentList = postCommentService.getPostCommentList(postId);
         return postCommentList.stream()
                 .map(PostCommentDto.Res::new)
                 .collect(Collectors.toList());
@@ -46,12 +46,12 @@ public class PostCommentController {
     /*
     대댓글 조회
      */
-    @GetMapping("/comments/{comment_id}/replies")
+    @GetMapping("/comments/{commentId}/replies")
     @ResponseStatus(HttpStatus.OK)
     public List<PostCommentDto.Res> getPostCommentReplyList(
-            @PathVariable final long comment_id
+            @PathVariable final long commentId
     ) {
-        List<PostComment> postCommentList = postCommentService.getPostCommentReplyList(comment_id);
+        List<PostComment> postCommentList = postCommentService.getPostCommentReplyList(commentId);
         return postCommentList.stream()
                 .map(PostCommentDto.Res::new)
                 .collect(Collectors.toList());
@@ -60,12 +60,12 @@ public class PostCommentController {
     /*
     댓글 삭제
      */
-    @DeleteMapping("/comments/{comment_id}")
+    @DeleteMapping("/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePostComment(
-            @PathVariable final long comment_id
+            @PathVariable final long commentId
     ) {
-        postCommentService.deletePostComment(comment_id);
+        postCommentService.deletePostComment(commentId);
     }
 
 }
