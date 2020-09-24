@@ -26,45 +26,33 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final PostLikeQueryRepository postLikeQueryRepository;
 
-    /**
-     * 게시글 좋아요 생성
-     */
-    public PostLike save(PostLikeDto.CreateRequest dto){
-
-        PostLike postLike = postLikeQueryRepository.exists(dto.getPostId(), dto.getUserId());
-        if (postLike != null) throw new PostLikeDuplicatedException();
-
-        // 이게 맞나 각각의 service를 가져와서 찾는게 맞나..?!
-        Post post = postRepository.findById(dto.getPostId())
-                .orElseThrow(PostNotFoundException::new);
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(UserNotFoundException::new);
-
-        return postLikeRepository.save(new PostLike(post, user));
-    }
 
     /**
-     * 게시글 좋아요 취소
+     * 게시글 좋아요 생성 or 삭제 (토글)
      */
-    public void delete(PostLikeDto.CancelRequest dto){
+    public void toggle(Long postId, Long userId){
 
-        PostLike postLike = postLikeQueryRepository.exists(dto.getPostId(), dto.getUserId());
-        if (postLike == null) throw new PostLikeNotFoundException();
+        PostLike postLike = postLikeQueryRepository.exists(postId, userId);
+        if (postLike != null){
+            postLikeRepository.deleteById(postLike.getPostLikeId());
+            return;
+        }
 
-        postLikeRepository.deleteById(postLike.getPostLikeId());
-    }
+        Post post = Post.builder().postId(postId).build();
+        User user = User.builder().userId(userId).build();
 
-    /**
-     * 특정 사용자가 좋아요한 PostLike(게시글) 모두 찾기
-     */
-    public List<PostLike> findAllByUserId(PostLikeDto.FindByUserRequest dto){
-        return postLikeQueryRepository.findAllByUserId(dto.getUserId());
+//        Post post = postRepository.findById(postId)
+//                .orElseThrow(PostNotFoundException::new);
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(UserNotFoundException::new);
+
+        postLikeRepository.save(PostLike.of(post, user));
     }
 
     /**
      * 특정 게시글을 좋아요한 PostLike(사용자) 모두 찾기
      */
-    public List<PostLike> findAllByPostId(PostLikeDto.FindByPostRequest dto){
-        return postLikeQueryRepository.findAllByPostId(dto.getPostId());
+    public List<PostLike> findAllByPostId(Long postId){
+        return postLikeQueryRepository.findAllByPostId(postId);
     }
 }

@@ -27,13 +27,6 @@ public class PostLike {
     @JoinColumn(name = "userId")
     private User user;
 
-    // 1안
-    public PostLike(Post post, User user){
-        this.post = post;
-        this.user = user;
-    }
-
-    // 2안
     public static PostLike of(Post post, User user){
         return PostLike.builder()
                 .post(post)

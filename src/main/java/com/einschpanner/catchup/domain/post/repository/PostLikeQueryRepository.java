@@ -29,13 +29,6 @@ public class PostLikeQueryRepository {
                 .fetchOne();
     }
 
-    public List<PostLike> findAllByUserId(Long userId){
-        return queryFactory
-                .selectFrom(postLike)
-                .where(postLike.user.userId.eq(userId))
-                .fetch();
-    }
-
     // 임시
     public List<PostLike> findAllByPostId(Long postId) {
         return queryFactory

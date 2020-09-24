@@ -11,31 +11,8 @@ public class PostLikeDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class CreateRequest { // 네이밍 의논
-        private Long postId;
+    public static class Request {
         private Long userId;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class CancelRequest {
-        private Long postId;
-        private Long userId;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class FindByUserRequest {
-        private Long userId;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class FindByPostRequest {
-        private Long postId;
     }
 
     @Getter
