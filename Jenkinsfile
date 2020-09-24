@@ -1,6 +1,23 @@
 pipeline {
   agent any
   stages {
+    stage('build') {
+      steps {
+        sh './gradlew clean build'
+      }
+      post {
+        success {
+            resultSlackSend("good", "SUCCESS")x
+        }
+        failure {
+            resultSlackSend("danger", "FAILURE")
+        }
+        aborted {
+            resultSlackSend("warning", "ABORTED")
+        }
+      }
+    }
+
     stage('deploy') {
     when { branch 'develop' }
       steps {
@@ -9,7 +26,7 @@ pipeline {
       }
       post {
         success {
-            resultSlackSend("good", "SUCCESS")
+            resultSlackSend("good", "SUCCESS")x
         }
         failure {
             resultSlackSend("danger", "FAILURE")
