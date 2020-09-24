@@ -22,7 +22,7 @@ public class PostLikeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void togglePostLike(
             @PathVariable final Long postId,
-            @RequestBody PostLikeDto.Request postDto
+            @RequestBody PostLikeDto.Req postDto
     ){
 
         postLikeService.toggle(postId, postDto.getUserId());
@@ -30,13 +30,13 @@ public class PostLikeController {
 
     @GetMapping("/{postId}/like")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDto.Response> findAllPostLikes(
+    public List<UserDto.Res> findAllPostLikes(
             @PathVariable final Long postId
     ){
         List<PostLike> postLikes = postLikeService.findAllByPostId(postId);
         return postLikes.stream()
                 .map(PostLike::getUser)
-                .map(UserDto.Response::new)
+                .map(UserDto.Res::new)
                 .collect(Collectors.toList());
     }
 }

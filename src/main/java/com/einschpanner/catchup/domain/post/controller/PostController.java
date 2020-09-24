@@ -17,60 +17,45 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostService postService;
 
-    // TEST QueryDSL
-    private final PostQueryRepository postQueryRepository;
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDto.Response savePost(
-            @RequestBody PostDto.CreateRequest dto
+    public PostDto.Res savePost(
+            @RequestBody PostDto.CreateReq dto
     ){
         Post post = postService.save(dto);
-        return new PostDto.Response(post);
+        return new PostDto.Res(post);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PostDto.Response> findAllPosts(){
+    public List<PostDto.Res> findAllPosts(){
         return postService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public PostDto.Response findPost(
-            @PathVariable final Long id
+    public PostDto.Res findPost(
+            @PathVariable final Long postId
     ){
-        Post post = postService.findById(id);
-        return new PostDto.Response(post);
+        Post post = postService.findById(postId);
+        return new PostDto.Res(post);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public PostDto.Response updatePost(
-            @PathVariable final Long id,
-            @RequestBody PostDto.UpdateRequest dto
+    public PostDto.Res updatePost(
+            @PathVariable final Long postId,
+            @RequestBody PostDto.UpdateReq dto
     ){
-        Post post = postService.update(id, dto);
-        return new PostDto.Response(post);
+        Post post = postService.update(postId, dto);
+        return new PostDto.Res(post);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public void deletePost(
-            @PathVariable final Long id
+            @PathVariable final Long postId
     ){
-        postService.delete(id);
-    }
-
-    // TEST QueryDSL
-    @GetMapping("/queryDSL")
-    @ResponseStatus(HttpStatus.OK)
-    public List<PostDto.Response> findPostByTitle(
-            @RequestParam final String title
-    ){
-        List<Post> postList = postQueryRepository.findByTitle(title);
-        return postList.stream()
-                .map(PostDto.Response::new)
-                .collect(Collectors.toList());
+        postService.delete(postId);
     }
 }

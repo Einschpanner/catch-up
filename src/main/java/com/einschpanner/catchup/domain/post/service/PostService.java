@@ -4,11 +4,10 @@ import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
 import com.einschpanner.catchup.domain.post.exception.PostNotFoundException;
 import com.einschpanner.catchup.domain.post.repository.PostRepository;
-import com.einschpanner.catchup.global.error.ErrorCode;
-import com.einschpanner.catchup.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,8 @@ public class PostService {
     /**
      * 게시글 생성
      */
-    public Post save(PostDto.CreateRequest dto) {
+    @Transactional
+    public Post save(PostDto.CreateReq dto) {
         Post post = modelMapper.map(dto, Post.class);
 
         return postRepository.save(post);
@@ -31,17 +31,19 @@ public class PostService {
     /**
      * 게시글 List 모두 조회
      */
-    public List<PostDto.Response> findAll() {
+    @Transactional
+    public List<PostDto.Res> findAll() {
         List<Post> postList = postRepository.findAll();
 
         return postList.stream()
-                .map(PostDto.Response::new)
+                .map(PostDto.Res::new)
                 .collect(Collectors.toList());
     }
 
     /**
      * 특정 게시글 1개 조회
      */
+    @Transactional
     public Post findById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -50,7 +52,8 @@ public class PostService {
     /**
      * 특정 게시글 1개 수정하기
      */
-    public Post update(Long postId, PostDto.UpdateRequest dto) {
+    @Transactional
+    public Post update(Long postId, PostDto.UpdateReq dto) {
         Post post = this.findById(postId);
         post.updateMyPost(dto);
 
@@ -60,8 +63,9 @@ public class PostService {
     /**
      * 특정 게시글 1개 삭제하기
      */
+    @Transactional
     public void delete(Long postId) {
-        this.findById(postId);
-        postRepository.deleteById(postId);
+        Post post = this.findById(postId);
+        post.setDeleted(Boolean.TRUE);
     }
 }

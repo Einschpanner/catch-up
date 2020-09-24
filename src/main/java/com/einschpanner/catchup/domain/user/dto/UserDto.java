@@ -6,21 +6,15 @@ import lombok.Getter;
 public class UserDto {
 
     @Getter
-    public static class Response {
-        private Long userId;
+    public static class Res {
         private String nickname;
         private String email;
         private String urlProfile;
-        private int cntFollowing;
-        private int cntFollower;
 
-        public Response(User user){
-            this.userId = user.getUserId();
+        public Res(User user){
             this.nickname = user.getNickname();
             this.email = user.getEmail();
             this.urlProfile = user.getUrlProfile();
-            this.cntFollowing = user.getCntFollowing();
-            this.cntFollower = user.getCntFollower();
         }
     }
 }

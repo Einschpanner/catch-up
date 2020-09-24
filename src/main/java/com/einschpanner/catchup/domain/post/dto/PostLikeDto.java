@@ -11,17 +11,17 @@ public class PostLikeDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class Request {
+    public static class Req {
         private Long userId;
     }
 
     @Getter
-    public static class Response {
+    public static class Res {
         private Long postLikeId;
         private Long postId;
         private Long userId;
 
-        public Response(PostLike postLike){
+        public Res(PostLike postLike){
             this.postLikeId = postLike.getPostLikeId();
             this.postId = postLike.getPost().getPostId();
             this.userId = postLike.getUser().getUserId();
