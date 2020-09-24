@@ -6,6 +6,7 @@ import com.einschpanner.catchup.global.common.ApiDocumentationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -18,8 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class PostControllerTest extends ApiDocumentationTest {
 
-
     @Test
+    @WithMockUser
     void savePost() throws Exception {
 
         // Given
@@ -28,9 +29,9 @@ class PostControllerTest extends ApiDocumentationTest {
         postDto.setEmail("test@naver.com");
         postDto.setTitle("Test Title");
         postDto.setUrlThumbnail("Test Thumbnail");
-        Post post1 = this.modelMapper.map(postDto, Post.class);
+        Post post = this.modelMapper.map(postDto, Post.class);
         given(postService.save(any(PostDto.CreateReq.class)))
-                .willReturn(post1);
+                .willReturn(post);
 
         // When & Then
         mockMvc.perform(post("/posts")
@@ -39,7 +40,7 @@ class PostControllerTest extends ApiDocumentationTest {
                 .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(postDto)))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(document("create-post",
                         requestFields(
                                 fieldWithPath("description").type(JsonFieldType.STRING).description("설명"),

@@ -52,7 +52,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePost(
             @PathVariable final Long postId
     ){

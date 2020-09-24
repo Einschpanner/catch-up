@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
         }
 )
 @AutoConfigureRestDocs
-@Import(RestDocsConfiguration.class)
+@Import(SecurityTestConfig.class)
 public abstract class ApiDocumentationTest {
 
     @Autowired

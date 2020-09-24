@@ -1,12 +1,6 @@
 pipeline {
   agent any
   stages {
-    stage('clone'){
-        steps {
-            checkout scm
-        }
-    }
-
     stage('build') {
       steps {
         sh './gradlew clean build'
