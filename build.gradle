@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.3.2.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'org.asciidoctor.convert' version '1.5.8'
+	id 'org.asciidoctor.convert' version '1.5.9.2'
 	id 'io.franzbecker.gradle-lombok' version '1.8'
 }
 
@@ -56,11 +56,12 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	// *.adoc 파일의 {snippets}를 자동으로 설정
-	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
+	asciidoctor('org.springframework.restdocs:spring-restdocs-asciidoctor')
 }
 
 ext {
 	set('snippetsDir', file("build/generated-snippets"))
+	snippetsDir = file('build/generated-snippets')
 }
 
 test {
@@ -73,13 +74,14 @@ test {
 
 /** Spring REST docs setting **/
 asciidoctor {
-//	inputs.dir snippetsDir
+	inputs.dir snippetsDir
 	dependsOn test
 }
-
-bootJar {
+task copyRestDocs(type: Copy) {
 	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}/html5") {
-		into "static/docs"
-	}
+	from "${asciidoctor.outputDir}/html5"
+	into "${sourceSets.main.output.resourcesDir}/static/docs"
+}
+bootJar {
+	dependsOn copyRestDocs
 }
