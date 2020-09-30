@@ -1,11 +1,12 @@
 package com.einschpanner.catchup.domain.post.controller;
 
 import com.einschpanner.catchup.domain.post.domain.PostLike;
-import com.einschpanner.catchup.domain.post.dto.PostLikeDto;
 import com.einschpanner.catchup.domain.post.service.PostLikeService;
 import com.einschpanner.catchup.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,18 +22,18 @@ public class PostLikeController {
     @PostMapping("/{postId}/like")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void togglePostLike(
-            @PathVariable final Long postId,
-            @RequestBody PostLikeDto.Req postDto
-    ){
-
-        postLikeService.toggle(postId, postDto.getUserId());
+            @PathVariable final Long postId
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+        postLikeService.toggle(postId, userId);
     }
 
     @GetMapping("/{postId}/like")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto.Res> findAllPostLikes(
             @PathVariable final Long postId
-    ){
+    ) {
         List<PostLike> postLikes = postLikeService.findAllByPostId(postId);
         return postLikes.stream()
                 .map(PostLike::getUser)

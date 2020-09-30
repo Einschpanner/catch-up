@@ -5,6 +5,7 @@ import com.einschpanner.catchup.global.security.handler.OAuth2AuthenticationSucc
 import com.einschpanner.catchup.global.security.provider.JwtTokenProvider;
 import com.einschpanner.catchup.global.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -26,8 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/","/css/**","/images/**","/js/**","/h2-console/**", "/hello", "/login", "/posts/**", "/posts").permitAll()
-                    .anyRequest().authenticated()
+                    .antMatchers("/","/css/**","/images/**","/js/**","/h2-console/**", "/hello", "/login").permitAll()
+                    .antMatchers(HttpMethod.GET).permitAll()
+                .anyRequest().authenticated()
                 .and()
                     .logout()
                         .logoutSuccessUrl("/")
