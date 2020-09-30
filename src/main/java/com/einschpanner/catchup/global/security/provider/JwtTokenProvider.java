@@ -39,22 +39,22 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     }
 
     // Jwt 토큰 생성
-    public String createToken(String userPk, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put("roles", roles);
+    public String createToken(Long userId, List<String> roles) {
         Date now = new Date();
-
-        return Jwts.builder()
-                .setClaims(claims) // 데이터
+        String token = Jwts.builder()
+                .setSubject(Long.toString(userId))
+                .claim("userId", userId)
+                .claim("roles", roles)
                 .setIssuedAt(now) // 토큰 발행일자
                 .setExpiration(new Date(now.getTime() + tokenValidMilisecond)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
                 .compact();
+        return token;
     }
 
     // Jwt 토큰으로 인증 정보를 조회
     public Authentication getAuthentication(Claims claims) {
-        return new UsernamePasswordAuthenticationToken(this.getUserPk(claims), "", this.getAuthorities(claims));
+        return new UsernamePasswordAuthenticationToken(this.getUserId(claims), "", this.getAuthorities(claims));
     }
 
     public String getUserPk(Claims claims) {
@@ -64,6 +64,11 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     private Collection<? extends GrantedAuthority> getAuthorities(Claims claims) {
         List<String> roles = claims.get("roles", List.class);
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    }
+
+    public Long getUserId(Claims claims) {
+        Long userId = claims.get("userId", Long.class);
+        return userId;
     }
 
     // Jwt 토큰에서 회원 구별 정보 추출
