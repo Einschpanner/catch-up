@@ -5,9 +5,11 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
@@ -43,8 +45,13 @@ public class SecurityTestConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .httpBasic().disable()
                 .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
+                .antMatchers("/","/css/**","/images/**","/js/**","/h2-console/**", "/hello", "/login").permitAll()
+                .antMatchers(HttpMethod.GET).permitAll()
                 .anyRequest().authenticated();
     }
 }
