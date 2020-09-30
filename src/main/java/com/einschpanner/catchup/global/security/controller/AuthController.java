@@ -17,8 +17,8 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public String checkAuth(
     ) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        return "Is this user authenticated? = " + auth.isAuthenticated();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long)authentication.getPrincipal();
+        return "userId  = " + userId;
     }
 }
