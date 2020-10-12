@@ -1,5 +1,8 @@
 package com.einschpanner.catchup.global.common;
 
+import com.einschpanner.catchup.domain.follow.controller.FollowController;
+import com.einschpanner.catchup.domain.follow.domain.Follow;
+import com.einschpanner.catchup.domain.follow.service.FollowService;
 import com.einschpanner.catchup.domain.post.controller.PostController;
 import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
 import com.einschpanner.catchup.domain.post.service.PostService;
@@ -22,7 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = {
         AuthController.class,
-        PostController.class
+        PostController.class,
+        FollowController.class
 },
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
@@ -47,5 +51,7 @@ public abstract class ApiDocumentationTest {
     @MockBean
     protected PostQueryRepository postQueryRepository;
 
+    @MockBean
+    protected FollowService followService;
 
 }

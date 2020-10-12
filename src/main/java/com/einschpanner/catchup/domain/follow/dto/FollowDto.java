@@ -1,7 +1,6 @@
 package com.einschpanner.catchup.domain.follow.dto;
 
 import com.einschpanner.catchup.domain.follow.domain.Follow;
-import com.einschpanner.catchup.domain.post.domain.PostLike;
 import com.einschpanner.catchup.domain.user.dto.UserDto;
 import lombok.Getter;
 
