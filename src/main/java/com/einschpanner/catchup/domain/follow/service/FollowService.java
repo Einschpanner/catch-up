@@ -22,7 +22,7 @@ public class FollowService {
     private final FollowQueryRepository followQueryRepository;
 
     /**
-     * 토글 following, follower
+     * 토글 following, follower ( 팔로우 추가, 삭제 )
      */
     @Transactional
     public void toggle(Long followerId, Long followingId) {
