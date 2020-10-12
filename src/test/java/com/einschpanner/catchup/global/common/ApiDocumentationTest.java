@@ -4,7 +4,9 @@ import com.einschpanner.catchup.domain.follow.controller.FollowController;
 import com.einschpanner.catchup.domain.follow.domain.Follow;
 import com.einschpanner.catchup.domain.follow.service.FollowService;
 import com.einschpanner.catchup.domain.post.controller.PostController;
+import com.einschpanner.catchup.domain.post.controller.PostLikeController;
 import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
+import com.einschpanner.catchup.domain.post.service.PostLikeService;
 import com.einschpanner.catchup.domain.post.service.PostService;
 import com.einschpanner.catchup.global.security.config.SecurityConfig;
 import com.einschpanner.catchup.global.security.controller.AuthController;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = {
         AuthController.class,
         PostController.class,
+        PostLikeController.class,
         FollowController.class
 },
         excludeFilters = {
@@ -50,6 +53,9 @@ public abstract class ApiDocumentationTest {
 
     @MockBean
     protected PostQueryRepository postQueryRepository;
+
+    @MockBean
+    protected PostLikeService postLikeService;
 
     @MockBean
     protected FollowService followService;
