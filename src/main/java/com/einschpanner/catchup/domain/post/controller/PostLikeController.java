@@ -18,7 +18,7 @@ public class PostLikeController {
 
     private final PostLikeService postLikeService;
 
-    @PostMapping("/{postId}/like")
+    @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void togglePostLike(
             @PathVariable final Long postId,
@@ -28,7 +28,7 @@ public class PostLikeController {
         postLikeService.toggle(postId, postDto.getUserId());
     }
 
-    @GetMapping("/{postId}/like")
+    @GetMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto.Res> findAllPostLikes(
             @PathVariable final Long postId

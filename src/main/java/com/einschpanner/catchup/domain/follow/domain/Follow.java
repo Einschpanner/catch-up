@@ -1,11 +1,10 @@
 package com.einschpanner.catchup.domain.follow.domain;
 
+import com.einschpanner.catchup.domain.post.domain.Post;
+import com.einschpanner.catchup.domain.post.domain.PostLike;
 import com.einschpanner.catchup.domain.user.domain.User;
 import com.einschpanner.catchup.global.model.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -15,6 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class Follow {
 
     @Id
@@ -28,6 +28,13 @@ public class Follow {
     @ManyToOne
     @JoinColumn(name = "followerId")
     private User follower;
+
+    public static Follow of(User follower, User following){
+        return Follow.builder()
+                .follower(follower)
+                .following(following)
+                .build();
+    }
 }
 
 

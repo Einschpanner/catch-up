@@ -25,7 +25,6 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final PostLikeQueryRepository postLikeQueryRepository;
 
-
     /**
      * 게시글 좋아요 생성 or 삭제 (토글)
      */
