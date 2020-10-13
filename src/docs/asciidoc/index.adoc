@@ -80,20 +80,25 @@ Catch-Up;
 
 operation::create-post[snippets='http-request,request-fields']
 
+[[find-post-likes]]
+=== 특정 게시글을 좋아요한 PostLike(사용자) 모두 찾기
+
+operation::toggle-follow[snippets='http-request, path-parameters']
+
 [[toggle-follow]]
 === 팔로우 추가 or 삭제
 
-operation::toggle-follow[snippets='http-request']
+operation::toggle-follow[snippets='http-request, path-parameters']
 
 [[find-following]]
 === 특정 ID가 팔로잉하는 사용자 리스트 불러오기
 
-operation::toggle-follow[snippets='http-request']
+operation::toggle-follow[snippets='http-request, path-parameters']
 
 [[find-follower]]
 === 특정 ID의 팔로워 리스트 불러오기
 
-operation::toggle-follow[snippets='http-request']
+operation::toggle-follow[snippets='http-request, path-parameters']
 
 [[Auth]]
 === 권한 정보

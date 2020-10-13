@@ -17,6 +17,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,13 +85,16 @@ class PostLikeControllerTest extends ApiDocumentationTest {
 
         int postId = 1;
         // When & Then
-        mockMvc.perform(get("/posts/" + postId + "/likes")
+        mockMvc.perform(get("/posts/{postId}/likes", postId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("find-post-likes"))
+                .andDo(document("find-post-likes",
+                        pathParameters(
+                                parameterWithName("postId").description("POST ID")
+                        )))
         ;
     }
 }

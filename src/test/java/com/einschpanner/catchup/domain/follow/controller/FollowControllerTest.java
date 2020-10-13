@@ -17,6 +17,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,13 +63,16 @@ class FollowControllerTest extends ApiDocumentationTest {
         int subscribeId = 1;
 
         // When & Then
-        mockMvc.perform(post("/following/" + subscribeId)
+        mockMvc.perform(post("/following/{subscribeId}", subscribeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isNoContent())
-                .andDo(document("toggle-follow"))
+                .andDo(document("toggle-follow",
+                        pathParameters(
+                                parameterWithName("subscribeId").description("팔로잉할 USER ID")
+                        )))
         ;
     }
 
@@ -96,13 +101,16 @@ class FollowControllerTest extends ApiDocumentationTest {
 
         int subscribeId = 1;
         // When & Then
-        mockMvc.perform(get("/following/" + subscribeId)
+        mockMvc.perform(get("/following/{subscribeId}", subscribeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("find-following"))
+                .andDo(document("find-following",
+                        pathParameters(
+                                parameterWithName("subscribeId").description("USER ID")
+                        )))
         ;
     }
 
@@ -131,13 +139,16 @@ class FollowControllerTest extends ApiDocumentationTest {
 
         int subscribeId = 1;
         // When & Then
-        mockMvc.perform(get("/follower/" + subscribeId)
+        mockMvc.perform(get("/follower/{subscribeId}", subscribeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("find-follower"))
+                .andDo(document("find-follower",
+                        pathParameters(
+                                parameterWithName("subscribeId").description("USER ID")
+                        )))
         ;
     }
 }
