@@ -46,7 +46,7 @@ class PostCommentControllerTest extends ApiDocumentationTest {
                                 fieldWithPath("postId").type(JsonFieldType.NUMBER).description("포스트 아이디"),
                                 fieldWithPath("parentsId").type(JsonFieldType.NUMBER).description("부모 댓글 아이디"),
                                 fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                                fieldWithPath("contents").type(JsonFieldType.STRING).description("내")
+                                fieldWithPath("contents").type(JsonFieldType.STRING).description("내용")
                         )
                 ))
         ;
