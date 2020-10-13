@@ -49,6 +49,8 @@ class UserControllerTest extends ApiDocumentationTest {
                         requestFields(
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                 fieldWithPath("urlProfile").type(JsonFieldType.STRING).description("프로필 사진 위치"),
+                                fieldWithPath("nickname").type(JsonFieldType.NUMBER).description("닉네임"),
+                                fieldWithPath("urlProfile").type(JsonFieldType.NUMBER).description("프로필 사진 위치"),
                                 fieldWithPath("description").type(JsonFieldType.STRING).description("소개글"),
                                 fieldWithPath("addrRss").type(JsonFieldType.STRING).description("RSS 주소"),
                                 fieldWithPath("addrGithub").type(JsonFieldType.STRING).description("깃허브 주소"),

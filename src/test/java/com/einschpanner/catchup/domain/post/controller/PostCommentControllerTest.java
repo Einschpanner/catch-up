@@ -56,7 +56,6 @@ class PostCommentControllerTest extends ApiDocumentationTest {
     void getPostCommentList() throws Exception {
         // Given
         PostCommentDto.Req req = TestPostCommentFactory.createPostCommentDto();
-
         List<PostComment> postCommentList = new ArrayList<PostComment>();
         postCommentList.add(modelMapper.map(req, PostComment.class));
         given(postCommentService.getPostCommentList((long) 1))
