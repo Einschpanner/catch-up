@@ -3,6 +3,7 @@ package com.einschpanner.catchup.domain.post.controller;
 import com.einschpanner.catchup.domain.post.domain.PostComment;
 import com.einschpanner.catchup.domain.post.dto.PostCommentDto;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
+import com.einschpanner.catchup.global.common.testFactory.post.TestPostCommentFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -30,12 +31,7 @@ class PostCommentControllerTest extends ApiDocumentationTest {
     void savePostComment() throws Exception {
 
         // Given
-        PostCommentDto.Req req = PostCommentDto.Req.builder()
-                .postId((long) 1)
-                .parentsId((long) 2)
-                .email("rlawlsdud419@gmail.com")
-                .contents("test contents")
-                .build();
+        PostCommentDto.Req req = TestPostCommentFactory.createPostCommentDto();
 
         // When & Then
         mockMvc.perform(post("/posts/comments")
@@ -59,12 +55,8 @@ class PostCommentControllerTest extends ApiDocumentationTest {
     @Test
     void getPostCommentList() throws Exception {
         // Given
-        PostCommentDto.Req req = PostCommentDto.Req.builder()
-                .postId((long) 1)
-                .parentsId(null)
-                .email("rlawlsdud419@gmail.com")
-                .contents("test contents")
-                .build();
+        PostCommentDto.Req req = TestPostCommentFactory.createPostCommentDto();
+
         List<PostComment> postCommentList = new ArrayList<PostComment>();
         postCommentList.add(modelMapper.map(req, PostComment.class));
         given(postCommentService.getPostCommentList((long) 1))

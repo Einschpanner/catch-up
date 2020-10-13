@@ -2,6 +2,7 @@ package com.einschpanner.catchup.domain.user.api;
 
 import com.einschpanner.catchup.domain.user.dto.ProfileDto;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
+import com.einschpanner.catchup.global.common.WithMockCustomUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
@@ -23,8 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserControllerTest extends ApiDocumentationTest {
 
-/*    @Test
-    @WithMockUser
+    @Test
+    @WithMockCustomUser
     void saveProfile() throws Exception {
         // Given
         ProfileDto.UpdateReq req = ProfileDto.UpdateReq.builder()
@@ -36,26 +37,18 @@ class UserControllerTest extends ApiDocumentationTest {
                 .addrBlog("blog")
                 .build();
 
-        String token = Jwts.builder()
-                .setSubject(Long.toString(1))
-                .claim("userId", 1)
-                .claim("roles", "USER")
-                .signWith(SignatureAlgorithm.HS256, "secretKey") // 암호화 알고리즘, secret값 세팅
-                .compact();
-
         // When & Then
         mockMvc.perform(post("/profiles")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
-                .header("X-AUTH-TOKEN", "Bearer  "+token)
                 .content(objectMapper.writeValueAsString(req)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("update-profiles",
                         requestFields(
-                                fieldWithPath("nickname").type(JsonFieldType.NUMBER).description("닉네임"),
-                                fieldWithPath("urlProfile").type(JsonFieldType.NUMBER).description("프로필 사진 위치"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
+                                fieldWithPath("urlProfile").type(JsonFieldType.STRING).description("프로필 사진 위치"),
                                 fieldWithPath("description").type(JsonFieldType.STRING).description("소개글"),
                                 fieldWithPath("addrRss").type(JsonFieldType.STRING).description("RSS 주소"),
                                 fieldWithPath("addrGithub").type(JsonFieldType.STRING).description("깃허브 주소"),
@@ -63,7 +56,7 @@ class UserControllerTest extends ApiDocumentationTest {
                         )
                 ))
         ;
-    }*/
+    }
 
     @Test
     void getProfile() throws Exception {
