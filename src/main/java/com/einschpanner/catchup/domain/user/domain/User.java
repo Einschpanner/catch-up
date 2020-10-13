@@ -86,8 +86,7 @@ public class User extends BaseTimeEntity {
         this.cntFollowing++;
     }
 
-    public void minusFollowingCount(){
-        this.cntFollowing--;
+    public void minusFollowingCount(){ this.cntFollowing--; }
       
     public User update(ProfileDto.UpdateReq updateReq) {
         this.nickname = updateReq.getNickname();
