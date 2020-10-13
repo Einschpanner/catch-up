@@ -4,6 +4,7 @@ import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.domain.PostLike;
 import com.einschpanner.catchup.domain.user.domain.User;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
+import com.einschpanner.catchup.global.common.WithMockCustomUser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -17,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,22 +46,23 @@ class PostLikeControllerTest extends ApiDocumentationTest {
                 .build();
     }
 
-//             TODO: 진영 PR 머지 이후 userId 가져와서 테스팅!
-//    @Test
-//    @WithMockUser
-//    void togglePostLike() throws Exception {
-//        int postId = 1;
-//
-//        // When & Then
-//        mockMvc.perform(post("/posts/" + postId + "/likes")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .characterEncoding("utf-8"))
-//                .andDo(print())
-//                .andExpect(status().isNoContent())
-//                .andDo(document("toggle-follow"))
-//        ;
-//    }
+    @Test
+    @WithMockCustomUser
+    void togglePostLike() throws Exception {
+        int postId = 1;
+
+        // When & Then
+        mockMvc.perform(post("/posts/{postId}/likes", postId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andDo(document("toggle-follow",pathParameters(
+                        parameterWithName("postId").description("POST ID")
+                )))
+        ;
+    }
 
     @Test
     @WithMockUser

@@ -3,6 +3,7 @@ package com.einschpanner.catchup.domain.follow.controller;
 import com.einschpanner.catchup.domain.follow.domain.Follow;
 import com.einschpanner.catchup.domain.user.domain.User;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
+import com.einschpanner.catchup.global.common.WithMockCustomUser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -57,7 +58,7 @@ class FollowControllerTest extends ApiDocumentationTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void toggleFollow() throws Exception {
         int subscribeId = 1;
 

@@ -6,6 +6,8 @@ import com.einschpanner.catchup.domain.follow.dto.FollowDto;
 import com.einschpanner.catchup.domain.follow.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,15 +19,12 @@ public class FollowController {
 
     private final FollowService followService;
 
-    // 내가 구독한 사용자의 블로그 포스팅 불러오기
-    // ? FollowController 위치가 맞는지 ?
     @GetMapping("following")
     @ResponseStatus(HttpStatus.OK)
     public List<FollowDto.BlogRes> findMyFollowingBlog(){
-//        TODO : userId 받는 로직 추가
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        Long userId = (Long) authentication.getPrincipal();
-        Long userId = 1L;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+
         List<Follow> follows = followService.findAllFollowing(userId);
         return follows.stream()
                 .map(FollowDto.BlogRes::new)
@@ -37,10 +36,8 @@ public class FollowController {
     public void toggleFollow(
             @PathVariable final Long subscribeId
     ){
-//        TODO : userId 받는 로직 추가
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        Long userId = (Long) authentication.getPrincipal();
-        Long userId = 1L;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
         followService.toggle(userId, subscribeId);
     }
 
