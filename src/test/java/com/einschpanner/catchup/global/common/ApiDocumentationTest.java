@@ -54,12 +54,8 @@ public abstract class ApiDocumentationTest {
     protected PostQueryRepository postQueryRepository;
 
     @MockBean
-    protected AuthController authController;
-
-    @MockBean
     protected PostCommentService postCommentService;
-
+  
     @MockBean
     protected UserService userService;
-
 }
