@@ -13,6 +13,7 @@ public class ProfileDto {
     @ToString
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
+    @Builder
     public static class UpdateReq {
         private String nickname;
         private String urlProfile;
