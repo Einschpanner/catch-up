@@ -15,7 +15,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ProfileDto.UpdateRes saveProfile(
             @RequestBody final ProfileDto.UpdateReq updateReq
     ) {

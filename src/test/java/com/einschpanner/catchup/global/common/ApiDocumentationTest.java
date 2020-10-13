@@ -1,8 +1,12 @@
 package com.einschpanner.catchup.global.common;
 
+import com.einschpanner.catchup.domain.post.controller.PostCommentController;
 import com.einschpanner.catchup.domain.post.controller.PostController;
 import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
+import com.einschpanner.catchup.domain.post.service.PostCommentService;
 import com.einschpanner.catchup.domain.post.service.PostService;
+import com.einschpanner.catchup.domain.user.api.UserController;
+import com.einschpanner.catchup.domain.user.service.UserService;
 import com.einschpanner.catchup.global.security.config.SecurityConfig;
 import com.einschpanner.catchup.global.security.controller.AuthController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +26,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = {
         AuthController.class,
-        PostController.class
+        PostController.class,
+        PostCommentController.class,
+        UserController.class
 },
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
@@ -49,5 +55,11 @@ public abstract class ApiDocumentationTest {
 
     @MockBean
     protected AuthController authController;
+
+    @MockBean
+    protected PostCommentService postCommentService;
+
+    @MockBean
+    protected UserService userService;
 
 }
