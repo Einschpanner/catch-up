@@ -68,7 +68,7 @@ public abstract class ApiDocumentationTest {
 
     @MockBean
     protected PostCommentService postCommentService;
-
+  
     @MockBean
     protected UserService userService;
 }
