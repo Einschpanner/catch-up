@@ -1,6 +1,7 @@
 package com.einschpanner.catchup.domain.user.domain;
 
 import com.einschpanner.catchup.domain.blog.domain.Blog;
+import com.einschpanner.catchup.domain.user.dto.ProfileDto;
 import com.einschpanner.catchup.global.model.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -87,5 +88,15 @@ public class User extends BaseTimeEntity {
 
     public void minusFollowingCount(){
         this.cntFollowing--;
+      
+    public User update(ProfileDto.UpdateReq updateReq) {
+        this.nickname = updateReq.getNickname();
+        this.urlProfile = updateReq.getUrlProfile();
+        this.description = updateReq.getDescription();
+        this.addrRss = updateReq.getAddrRss();
+        this.addrGithub = updateReq.getAddrGithub();
+        this.addrBlog = updateReq.getAddrBlog();
+
+        return this;
     }
 }

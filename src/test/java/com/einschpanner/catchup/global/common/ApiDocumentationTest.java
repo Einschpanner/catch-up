@@ -3,11 +3,15 @@ package com.einschpanner.catchup.global.common;
 import com.einschpanner.catchup.domain.follow.controller.FollowController;
 import com.einschpanner.catchup.domain.follow.domain.Follow;
 import com.einschpanner.catchup.domain.follow.service.FollowService;
+import com.einschpanner.catchup.domain.post.controller.PostCommentController;
 import com.einschpanner.catchup.domain.post.controller.PostController;
 import com.einschpanner.catchup.domain.post.controller.PostLikeController;
 import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
 import com.einschpanner.catchup.domain.post.service.PostLikeService;
+import com.einschpanner.catchup.domain.post.service.PostCommentService;
 import com.einschpanner.catchup.domain.post.service.PostService;
+import com.einschpanner.catchup.domain.user.api.UserController;
+import com.einschpanner.catchup.domain.user.service.UserService;
 import com.einschpanner.catchup.global.security.config.SecurityConfig;
 import com.einschpanner.catchup.global.security.controller.AuthController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +33,9 @@ import org.springframework.test.web.servlet.MockMvc;
         AuthController.class,
         PostController.class,
         PostLikeController.class,
-        FollowController.class
+        FollowController.class,
+        PostCommentController.class,
+        UserController.class
 },
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
@@ -60,4 +66,9 @@ public abstract class ApiDocumentationTest {
     @MockBean
     protected FollowService followService;
 
+    @MockBean
+    protected PostCommentService postCommentService;
+
+    @MockBean
+    protected UserService userService;
 }

@@ -30,7 +30,6 @@ public class PostCommentService {
         PostComment parents = null;
         if (req.getParentsId() != null)
             parents = postCommentRepository.findById(req.getParentsId()).orElseThrow(PostCommentNotFoundException::new);
-        // 머지하 충돌날 익셉션 usernotfoundException
         userRepository.findByEmail(req.getEmail()).orElseThrow(UserNotFoundException::new);
 
         return postCommentRepository.save(new PostComment(req, post, parents));

@@ -100,6 +100,31 @@ operation::find-following[snippets='http-request,path-parameters']
 
 operation::find-follower[snippets='http-request,path-parameters']
 
+[[create-postComment]]
+=== 포스트 댓글 생성
+
+operation::create-postComment[snippets='http-request,request-fields']
+
+[[get-postComments]]
+=== 포스트 댓글 가져오기
+
+operation::get-postComments[snippets='http-request,path-parameters']
+
+[[get-postCommentReplies]]
+=== 포스트 대댓글 가져오기
+
+operation::get-postCommentReplies[snippets='http-request,path-parameters']
+
+[[delete-postComment]]
+=== 포스트 댓글 삭제
+
+operation::delete-postComment[snippets='http-request,path-parameters']
+
+[[get-profile]]
+=== 프로필 정보 가져오기
+
+operation::get-profile[snippets='http-request,path-parameters']
+
 [[Auth]]
 === 권한 정보
 

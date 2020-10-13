@@ -8,6 +8,8 @@ public class PostDto {
     @Getter
     @Setter
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class CreateReq {
 
         private String title;
@@ -41,7 +43,7 @@ public class PostDto {
         private int cntLike;
         private int cntComment;
 
-        public Res(Post post){
+        public Res(Post post) {
             this.id = post.getPostId();
             this.title = post.getTitle();
             this.description = post.getDescription();

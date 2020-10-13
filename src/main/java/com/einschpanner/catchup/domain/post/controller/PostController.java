@@ -2,14 +2,12 @@ package com.einschpanner.catchup.domain.post.controller;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
-import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
 import com.einschpanner.catchup.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/posts")
@@ -21,14 +19,14 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     public PostDto.Res savePost(
             @RequestBody PostDto.CreateReq dto
-    ){
+    ) {
         Post post = postService.save(dto);
         return new PostDto.Res(post);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<PostDto.Res> findAllPosts(){
+    public List<PostDto.Res> findAllPosts() {
         return postService.findAll();
     }
 
@@ -36,7 +34,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public PostDto.Res findPost(
             @PathVariable final Long postId
-    ){
+    ) {
         Post post = postService.findById(postId);
         return new PostDto.Res(post);
     }
@@ -46,7 +44,7 @@ public class PostController {
     public PostDto.Res updatePost(
             @PathVariable final Long postId,
             @RequestBody PostDto.UpdateReq dto
-    ){
+    ) {
         Post post = postService.update(postId, dto);
         return new PostDto.Res(post);
     }
@@ -55,7 +53,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePost(
             @PathVariable final Long postId
-    ){
+    ) {
         postService.delete(postId);
     }
 }
