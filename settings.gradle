@@ -1,1 +1,4 @@
 rootProject.name = 'catch-up'
+include 'catchup-core'
+include 'catchup-api'
+
