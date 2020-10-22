@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.api;
+package com.einschpanner.catchup.user.api;
 
 import com.einschpanner.catchup.domain.user.dto.ProfileDto;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
