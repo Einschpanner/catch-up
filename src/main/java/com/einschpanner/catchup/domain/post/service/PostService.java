@@ -2,8 +2,12 @@ package com.einschpanner.catchup.domain.post.service;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
+import com.einschpanner.catchup.domain.post.exception.PostAccessDeniedException;
 import com.einschpanner.catchup.domain.post.exception.PostNotFoundException;
 import com.einschpanner.catchup.domain.post.repository.PostRepository;
+import com.einschpanner.catchup.domain.user.dao.UserRepository;
+import com.einschpanner.catchup.domain.user.domain.User;
+import com.einschpanner.catchup.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,14 +21,18 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     /**
      * 게시글 생성
      */
     @Transactional
-    public Post save(PostDto.CreateReq dto) {
+    public Post save(Long userId, PostDto.CreateReq dto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
         Post post = modelMapper.map(dto, Post.class);
+        post.setUser(user);
 
         return postRepository.save(post);
     }
@@ -54,10 +62,13 @@ public class PostService {
      * 특정 게시글 1개 수정하기
      */
     @Transactional
-    public Post update(Long postId, PostDto.UpdateReq dto) {
+    public Post update(Long userId, Long postId, PostDto.UpdateReq dto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
         Post post = this.findById(postId);
-        post.updateMyPost(dto);
+        if (post.isNotOwner(user)) throw new PostAccessDeniedException();
 
+        post.updateMyPost(dto);
         return postRepository.save(post);
     }
 
@@ -65,8 +76,11 @@ public class PostService {
      * 특정 게시글 1개 삭제하기
      */
     @Transactional
-    public void delete(Long postId) {
+    public void delete(Long userId, Long postId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
         Post post = this.findById(postId);
+        if (post.isNotOwner(user)) throw new PostAccessDeniedException();
         post.setDeleted(Boolean.TRUE);
     }
 }

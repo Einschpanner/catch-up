@@ -46,6 +46,7 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @Setter // 안 좋은 것?
     private User user;
 
     @OneToMany
@@ -73,6 +74,7 @@ public class Post extends BaseTimeEntity {
     public void minusCommentCnt() {
         this.cntComment--;
     }
+
     public void plusLikeCnt() {
         this.cntLike++;
     }
@@ -81,5 +83,8 @@ public class Post extends BaseTimeEntity {
         this.cntLike--;
     }
 
+    public boolean isNotOwner(User user){
+        return !this.user.getUserId().equals(user.getUserId());
+    }
 }
 

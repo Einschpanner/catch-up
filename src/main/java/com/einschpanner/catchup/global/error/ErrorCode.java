@@ -17,6 +17,7 @@ public enum ErrorCode {
 
     // POST
     POST_NOT_FOUND(404, "P001", "게시글을 찾을 수 없습니다."),
+    POST_ACCESS_DENIED(403, "P002", "게시글을 수정, 삭제할 권한이 없습니다."),
 
     // POSTLIKE
     POST_LIKE_DUPLICATED(400, "PL001", "이미 게시글에 좋아요를 한 사용자입니다."),

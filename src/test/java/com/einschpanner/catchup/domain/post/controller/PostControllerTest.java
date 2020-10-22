@@ -30,7 +30,7 @@ class PostControllerTest extends ApiDocumentationTest {
         postDto.setTitle("Test Title");
         postDto.setUrlThumbnail("Test Thumbnail");
         Post post = this.modelMapper.map(postDto, Post.class);
-        given(postService.save(any(PostDto.CreateReq.class)))
+        given(postService.save(any(Long.class), any(PostDto.CreateReq.class)))
                 .willReturn(post);
 
         // When & Then

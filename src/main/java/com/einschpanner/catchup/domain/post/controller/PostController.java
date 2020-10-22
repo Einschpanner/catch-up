@@ -5,6 +5,8 @@ import com.einschpanner.catchup.domain.post.dto.PostDto;
 import com.einschpanner.catchup.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +22,9 @@ public class PostController {
     public PostDto.Res savePost(
             @RequestBody PostDto.CreateReq dto
     ) {
-        Post post = postService.save(dto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+        Post post = postService.save(userId, dto);
         return new PostDto.Res(post);
     }
 
@@ -32,11 +36,11 @@ public class PostController {
 
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public PostDto.Res findPost(
+    public PostDto.ResWithUser findPost(
             @PathVariable final Long postId
     ) {
         Post post = postService.findById(postId);
-        return new PostDto.Res(post);
+        return new PostDto.ResWithUser(post);
     }
 
     @PutMapping("/{postId}")
@@ -45,7 +49,9 @@ public class PostController {
             @PathVariable final Long postId,
             @RequestBody PostDto.UpdateReq dto
     ) {
-        Post post = postService.update(postId, dto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+        Post post = postService.update(userId, postId, dto);
         return new PostDto.Res(post);
     }
 
@@ -54,6 +60,8 @@ public class PostController {
     public void deletePost(
             @PathVariable final Long postId
     ) {
-        postService.delete(postId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+        postService.delete(userId, postId);
     }
 }
