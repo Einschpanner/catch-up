@@ -2,7 +2,9 @@ package com.einschpanner.catchup.domain.post.controller;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
+import com.einschpanner.catchup.domain.user.domain.User;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
+import com.einschpanner.catchup.global.common.WithMockCustomUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -20,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest extends ApiDocumentationTest {
 
     @Test
-    @WithMockUser
+    @WithMockCustomUser
     void savePost() throws Exception {
 
         // Given
@@ -30,6 +32,7 @@ class PostControllerTest extends ApiDocumentationTest {
         postDto.setTitle("Test Title");
         postDto.setUrlThumbnail("Test Thumbnail");
         Post post = this.modelMapper.map(postDto, Post.class);
+
         given(postService.save(any(Long.class), any(PostDto.CreateReq.class)))
                 .willReturn(post);
 

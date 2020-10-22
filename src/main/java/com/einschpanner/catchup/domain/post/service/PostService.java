@@ -81,6 +81,7 @@ public class PostService {
                 .orElseThrow(UserNotFoundException::new);
         Post post = this.findById(postId);
         if (post.isNotOwner(user)) throw new PostAccessDeniedException();
+
         post.setDeleted(Boolean.TRUE);
     }
 }
