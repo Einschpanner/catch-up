@@ -41,12 +41,8 @@ public class PostService {
      * 게시글 List 모두 조회
      */
     @Transactional
-    public List<PostDto.Res> findAll() {
-        List<Post> postList = postRepository.findAll();
-
-        return postList.stream()
-                .map(PostDto.Res::new)
-                .collect(Collectors.toList());
+    public List<Post> findAll() {
+        return postRepository.findAll();
     }
 
     /**

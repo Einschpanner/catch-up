@@ -49,7 +49,7 @@ class PostLikeControllerTest extends ApiDocumentationTest {
     @Test
     @WithMockCustomUser
     void togglePostLike() throws Exception {
-        int postId = 1;
+        Long postId = 1L;
 
         // When & Then
         mockMvc.perform(post("/posts/{postId}/likes", postId)
@@ -58,9 +58,11 @@ class PostLikeControllerTest extends ApiDocumentationTest {
                 .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isNoContent())
-                .andDo(document("toggle-follow",pathParameters(
-                        parameterWithName("postId").description("POST ID")
-                )))
+                .andDo(document("toggle-follow",
+                        pathParameters(
+                            parameterWithName("postId").description("포스트 ID")
+                        )
+                ))
         ;
     }
 
@@ -86,7 +88,7 @@ class PostLikeControllerTest extends ApiDocumentationTest {
         given(postLikeService.findAllByPostId(any(Long.class)))
                 .willReturn(postLikes);
 
-        int postId = 1;
+        Long postId = 1L;
         // When & Then
         mockMvc.perform(get("/posts/{postId}/likes", postId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -96,8 +98,9 @@ class PostLikeControllerTest extends ApiDocumentationTest {
                 .andExpect(status().isOk())
                 .andDo(document("find-post-likes",
                         pathParameters(
-                                parameterWithName("postId").description("POST ID")
-                        )))
+                                parameterWithName("postId").description("포스트 ID")
+                        ))
+                )
         ;
     }
 }

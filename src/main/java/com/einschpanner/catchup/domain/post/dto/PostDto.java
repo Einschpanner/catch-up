@@ -23,6 +23,9 @@ public class PostDto {
     @Getter
     @Setter
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @ToString
     public static class UpdateReq {
 
         private String title;

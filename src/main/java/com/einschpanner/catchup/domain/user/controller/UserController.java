@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.domain.user.api;
+package com.einschpanner.catchup.domain.user.controller;
 
 import com.einschpanner.catchup.domain.user.dto.ProfileDto;
 import com.einschpanner.catchup.domain.user.service.UserService;

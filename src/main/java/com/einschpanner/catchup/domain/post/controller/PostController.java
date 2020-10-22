@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/posts")
@@ -31,7 +32,10 @@ public class PostController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<PostDto.Res> findAllPosts() {
-        return postService.findAll();
+        List<Post> posts = postService.findAll();
+        return posts.stream()
+                .map(PostDto.Res::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{postId}")
