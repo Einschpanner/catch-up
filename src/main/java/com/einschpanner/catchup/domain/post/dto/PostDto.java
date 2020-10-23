@@ -34,7 +34,7 @@ public class PostDto {
         private String urlThumbnail;
         private int cntComment;
         private int cntLike;
-        private boolean isDeleted;
+        private Boolean isDeleted;
     }
 
     @Getter

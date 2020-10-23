@@ -31,6 +31,7 @@ public class PostService {
     public Post save(Long userId, PostDto.CreateReq dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
+
         Post post = modelMapper.map(dto, Post.class);
         post.setUser(user);
 
@@ -78,6 +79,6 @@ public class PostService {
         Post post = this.findById(postId);
         if (post.isNotOwner(user)) throw new PostAccessDeniedException();
 
-        post.setDeleted(Boolean.TRUE);
+        post.setIsDeleted(Boolean.TRUE);
     }
 }

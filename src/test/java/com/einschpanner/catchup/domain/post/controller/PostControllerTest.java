@@ -99,45 +99,44 @@ class PostControllerTest extends ApiDocumentationTest {
         ;
     }
 
-//    @Test
-//    @WithMockCustomUser
-//    void updatePost() throws Exception {
-//        // Given
-//        PostDto.UpdateReq postDto = TestPostFactory.updatePostDto();
-//        System.out.println(postDto);
-//
-//        Post post = this.modelMapper.map(postDto, Post.class);
-//        System.out.println(post);
-//
-//        given(postService.update(any(Long.class), any(Long.class), any(PostDto.UpdateReq.class)))
-//                .willReturn(post);
-//
-//        Long postId = 1L;
-//        // When & Then
-//        mockMvc.perform(
-//                RestDocumentationRequestBuilders.put("/posts/{postId}", postId)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .characterEncoding("utf-8")
-//                .content(objectMapper.writeValueAsString(postDto))) // ?? 왜 "deleted":false 로 요청이 되는지?
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andDo(document("update-post",
-//                        pathParameters(
-//                                parameterWithName("postId").description("포스트 ID")
-//                        ),
-//                        requestFields(
-//                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
-//                                fieldWithPath("description").type(JsonFieldType.STRING).description("설명"),
-//                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-//                                fieldWithPath("urlThumbnail").type(JsonFieldType.STRING).description("사진위치"),
-//                                fieldWithPath("cntComment").type(JsonFieldType.NUMBER).description("댓글 개수"),
-//                                fieldWithPath("cntLike").type(JsonFieldType.NUMBER).description("좋아요 개수"),
-//                                fieldWithPath("isDeleted").type(JsonFieldType.BOOLEAN).description("포스트 삭제 여부")
-//                        )
-//                ))
-//        ;
-//    }
+    @Test
+    @WithMockCustomUser
+    void updatePost() throws Exception {
+        // Given
+        PostDto.UpdateReq postDto = TestPostFactory.updatePostDto();
+        System.out.println(postDto);
+
+        Post post = this.modelMapper.map(postDto, Post.class);
+        System.out.println(post);
+
+        System.out.println(objectMapper.writeValueAsString(postDto));
+
+        given(postService.update(any(Long.class), any(Long.class), any(PostDto.UpdateReq.class)))
+                .willReturn(post);
+
+        Long postId = 1L;
+        // When & Then
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.put("/posts/{postId}", postId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8")
+                .content(objectMapper.writeValueAsString(postDto))) // ?? 왜 "deleted":false 로 요청이 되는지?
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("update-post",
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("설명"),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+                                fieldWithPath("urlThumbnail").type(JsonFieldType.STRING).description("사진위치"),
+                                fieldWithPath("cntComment").type(JsonFieldType.NUMBER).description("댓글 개수"),
+                                fieldWithPath("cntLike").type(JsonFieldType.NUMBER).description("좋아요 개수"),
+                                fieldWithPath("isDeleted").type(JsonFieldType.BOOLEAN).description("포스트 삭제 여부")
+                        )
+                ))
+        ;
+    }
 
     @Test
     @WithMockCustomUser
