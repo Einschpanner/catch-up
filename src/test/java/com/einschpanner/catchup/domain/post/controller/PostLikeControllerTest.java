@@ -5,6 +5,8 @@ import com.einschpanner.catchup.domain.post.domain.PostLike;
 import com.einschpanner.catchup.domain.user.domain.User;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
 import com.einschpanner.catchup.global.common.WithMockCustomUser;
+import com.einschpanner.catchup.global.common.testFactory.post.TestPostFactory;
+import com.einschpanner.catchup.global.common.testFactory.user.TestUserFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -32,18 +34,9 @@ class PostLikeControllerTest extends ApiDocumentationTest {
 
     @BeforeAll
     public void setUp() {
-        user1 = User.builder()
-                .userId(1L)
-                .nickname("woowon")
-                .email("wwlee94@naver.com")
-                .urlProfile("https://google.com")
-                .build();
-        user2 = User.builder()
-                .userId(2L)
-                .nickname("jinyoung")
-                .email("rlawlsdud419@gmail.com")
-                .urlProfile("https://google.com")
-                .build();
+        List<User> users = TestUserFactory.getTestUsers();
+        user1 = users.get(0);
+        user2 = users.get(1);
     }
 
     @Test
@@ -70,19 +63,13 @@ class PostLikeControllerTest extends ApiDocumentationTest {
     @WithMockUser
     void findAllPostLikes()throws Exception {
 
-        Post post1 = Post.builder()
-                .postId(1L)
-                .title("첫번째 포스팅")
-                .cntComment(0)
-                .cntLike(0)
-                .user(user1)
-                .build();
+        Post post = TestPostFactory.createPost(1L, user1, null);
 
         // Given
         List<PostLike> postLikes = new ArrayList<>();
-        PostLike postLike1 = PostLike.of(post1, user1);
+        PostLike postLike1 = PostLike.of(post, user1);
         postLikes.add(postLike1);
-        PostLike postLike2 = PostLike.of(post1, user2);
+        PostLike postLike2 = PostLike.of(post, user2);
         postLikes.add(postLike2);
 
         given(postLikeService.findAllByPostId(any(Long.class)))

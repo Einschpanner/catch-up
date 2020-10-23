@@ -4,6 +4,8 @@ import com.einschpanner.catchup.domain.follow.domain.Follow;
 import com.einschpanner.catchup.domain.user.domain.User;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
 import com.einschpanner.catchup.global.common.WithMockCustomUser;
+import com.einschpanner.catchup.global.common.testFactory.follow.TestFollowFactory;
+import com.einschpanner.catchup.global.common.testFactory.user.TestUserFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -32,24 +35,10 @@ class FollowControllerTest extends ApiDocumentationTest {
 
     @BeforeAll
     public void setUp() {
-        user1 = User.builder()
-                .userId(1L)
-                .nickname("woowon")
-                .email("wwlee94@naver.com")
-                .urlProfile("https://google.com")
-                .build();
-        user2 = User.builder()
-                .userId(2L)
-                .nickname("jinyoung")
-                .email("rlawlsdud419@gmail.com")
-                .urlProfile("https://google.com")
-                .build();
-        user3 = User.builder()
-                .userId(3L)
-                .nickname("TEST")
-                .email("test@gmail.com")
-                .urlProfile("https://kakao.com")
-                .build();
+        List<User> users = TestUserFactory.getTestUsers();
+        user1 = users.get(0);
+        user2 = users.get(1);
+        user3 = users.get(2);
     }
 
     // TODO : 블로그 기능 개발 이후
@@ -81,20 +70,12 @@ class FollowControllerTest extends ApiDocumentationTest {
     void findFollowing() throws Exception {
 
         // Given
-        List<Follow> follows = new ArrayList<>();
-        Follow follow1 = Follow.builder()
-                .followId(1L)
-                .follower(user1)
-                .following(user2)
-                .build();
-        follows.add(follow1);
+        Follow follow1 = TestFollowFactory.createFollow(1L, user1, user2);
+        Follow follow2 = TestFollowFactory.createFollow(2L, user1, user3);
 
-        Follow follow2 = Follow.builder()
-                .followId(2L)
-                .follower(user1)
-                .following(user3)
-                .build();
-        follows.add(follow2);
+        List<Follow> follows = new ArrayList<>(
+                Arrays.asList(follow1, follow2)
+        );
 
         given(followService.findAllFollowing(any(Long.class)))
                 .willReturn(follows);
@@ -119,20 +100,12 @@ class FollowControllerTest extends ApiDocumentationTest {
     void findFollower() throws Exception {
 
         // Given
-        List<Follow> follows = new ArrayList<>();
-        Follow follow1 = Follow.builder()
-                .followId(1L)
-                .follower(user2)
-                .following(user1)
-                .build();
-        follows.add(follow1);
+        Follow follow1 = TestFollowFactory.createFollow(1L, user2, user1);
+        Follow follow2 = TestFollowFactory.createFollow(2L, user3, user1);
 
-        Follow follow2 = Follow.builder()
-                .followId(2L)
-                .follower(user3)
-                .following(user1)
-                .build();
-        follows.add(follow2);
+        List<Follow> follows = new ArrayList<>(
+                Arrays.asList(follow1, follow2)
+        );
 
         given(followService.findAllFollower(any(Long.class)))
                 .willReturn(follows);

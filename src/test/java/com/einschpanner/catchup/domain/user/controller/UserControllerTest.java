@@ -3,6 +3,7 @@ package com.einschpanner.catchup.domain.user.controller;
 import com.einschpanner.catchup.domain.user.dto.ProfileDto;
 import com.einschpanner.catchup.global.common.ApiDocumentationTest;
 import com.einschpanner.catchup.global.common.WithMockCustomUser;
+import com.einschpanner.catchup.global.common.testFactory.user.TestUserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -23,14 +24,7 @@ class UserControllerTest extends ApiDocumentationTest {
     @WithMockCustomUser
     void saveProfile() throws Exception {
         // Given
-        ProfileDto.UpdateReq req = ProfileDto.UpdateReq.builder()
-                .nickname("testNick")
-                .urlProfile("test Url")
-                .description("description")
-                .addrRss("rss")
-                .addrGithub("github")
-                .addrBlog("blog")
-                .build();
+        ProfileDto.UpdateReq req = TestUserFactory.createProfileDto();
 
         // When & Then
         mockMvc.perform(post("/profiles")

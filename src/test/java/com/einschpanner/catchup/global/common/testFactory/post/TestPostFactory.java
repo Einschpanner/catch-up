@@ -1,7 +1,6 @@
 package com.einschpanner.catchup.global.common.testFactory.post;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
-import com.einschpanner.catchup.domain.post.dto.PostCommentDto;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
 import com.einschpanner.catchup.domain.tag.domain.Tag;
 import com.einschpanner.catchup.domain.user.domain.User;
@@ -9,7 +8,6 @@ import com.einschpanner.catchup.domain.user.domain.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TestPostFactory {
 

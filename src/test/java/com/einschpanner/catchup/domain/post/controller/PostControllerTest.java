@@ -112,8 +112,10 @@ class PostControllerTest extends ApiDocumentationTest {
 //        given(postService.update(any(Long.class), any(Long.class), any(PostDto.UpdateReq.class)))
 //                .willReturn(post);
 //
+//        Long postId = 1L;
 //        // When & Then
-//        mockMvc.perform(put("/posts/{postId}", 1L)
+//        mockMvc.perform(
+//                RestDocumentationRequestBuilders.put("/posts/{postId}", postId)
 //                .contentType(MediaType.APPLICATION_JSON)
 //                .accept(MediaType.APPLICATION_JSON)
 //                .characterEncoding("utf-8")
@@ -121,6 +123,9 @@ class PostControllerTest extends ApiDocumentationTest {
 //                .andDo(print())
 //                .andExpect(status().isOk())
 //                .andDo(document("update-post",
+//                        pathParameters(
+//                                parameterWithName("postId").description("포스트 ID")
+//                        ),
 //                        requestFields(
 //                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
 //                                fieldWithPath("description").type(JsonFieldType.STRING).description("설명"),
