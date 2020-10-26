@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.global.common;
+package com.einschpanner.catchup.global.common.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -7,15 +7,13 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-
 @TestConfiguration
-public class SecurityTestConfig extends WebSecurityConfigurerAdapter {
-
+public class TestConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RestDocsMockMvcConfigurationCustomizer restDocsMockMvcConfigurationCustomizer() {
 
@@ -23,8 +21,8 @@ public class SecurityTestConfig extends WebSecurityConfigurerAdapter {
             @Override
             public void customize(MockMvcRestDocumentationConfigurer configurer) {
                 configurer.operationPreprocessors()
-                        .withRequestDefaults(prettyPrint())
-                        .withResponseDefaults(prettyPrint());
+                        .withRequestDefaults(Preprocessors.prettyPrint())
+                        .withResponseDefaults(Preprocessors.prettyPrint());
             }
         };
     }

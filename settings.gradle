@@ -1,4 +1,6 @@
 rootProject.name = 'catch-up'
-include 'catchup-core'
+include 'catchup-domain'
 include 'catchup-api'
+include 'catchup-security'
+include 'catchup-batch'
 

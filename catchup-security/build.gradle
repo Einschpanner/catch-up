@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+version 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    compile('org.springframework.boot:spring-boot-starter-oauth2-client')
+    runtimeOnly 'mysql:mysql-connector-java'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+bootJar { enabled = false }
+jar { enabled = true }

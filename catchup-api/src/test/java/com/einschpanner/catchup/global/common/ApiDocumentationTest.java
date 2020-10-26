@@ -1,6 +1,7 @@
 package com.einschpanner.catchup.global.common;
 
 import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
+import com.einschpanner.catchup.global.common.config.TestConfig;
 import com.einschpanner.catchup.global.security.config.SecurityConfig;
 import com.einschpanner.catchup.global.security.controller.AuthController;
 import com.einschpanner.catchup.post.controller.PostCommentController;
@@ -35,7 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
         }
 )
 @AutoConfigureRestDocs
-@Import(SecurityTestConfig.class)
+@Import(TestConfig.class)
 public abstract class ApiDocumentationTest {
 
     @Autowired
