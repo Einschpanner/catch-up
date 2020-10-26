@@ -56,6 +56,13 @@ subprojects {
 
 project(':catchup-api') {
     dependencies {
-        compile project(':catchup-core')
+        compile project(':catchup-security')
+        compile project(':catchup-domain')
+    }
+}
+
+project(':catchup-security') {
+    dependencies {
+        compile project(':catchup-domain')
     }
 }
