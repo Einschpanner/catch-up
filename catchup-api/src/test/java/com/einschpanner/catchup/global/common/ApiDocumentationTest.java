@@ -1,6 +1,6 @@
 package com.einschpanner.catchup.global.common;
 
-import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
+import com.einschpanner.catchup.domain.post.dao.PostQueryRepository;
 import com.einschpanner.catchup.global.common.config.TestConfig;
 import com.einschpanner.catchup.global.security.config.SecurityConfig;
 import com.einschpanner.catchup.global.security.controller.AuthController;

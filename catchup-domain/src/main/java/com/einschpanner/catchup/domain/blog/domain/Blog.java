@@ -1,10 +1,12 @@
 package com.einschpanner.catchup.domain.blog.domain;
 
+import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Blog {
 
     @Id
@@ -30,15 +33,27 @@ public class Blog {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String link;
-
-    @Column
-    private String urlThumbnail;
 
     @Column
     private int cntLike;
 
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @Column
+    private LocalDateTime publishedDate;
+
     @CreatedDate
     private LocalDateTime createdDate;
+
+    public Blog updateBlog(Blog blog){
+        this.title = blog.getTitle();
+        this.description = blog.getDescription();
+        this.email = blog.getEmail();
+        this.publishedDate = blog.getPublishedDate();
+        return this;
+    }
 }

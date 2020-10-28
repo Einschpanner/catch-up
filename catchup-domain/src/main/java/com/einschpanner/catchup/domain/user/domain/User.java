@@ -58,8 +58,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany
-    @JoinColumn(name = "userId")
+    @OneToMany(mappedBy = "user")
     private List<Blog> blogs;
 
     public String getRolekey() {

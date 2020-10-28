@@ -1,6 +1,5 @@
 spring:
-  profiles:
-    include: oauth
+
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
@@ -15,12 +14,3 @@ spring:
     username: root
     password: catchup!@
     driver-class-name: com.mysql.cj.jdbc.Driver
-
-  security:
-    user:
-      name: admin
-      password: admin
-
-logging:
-  level:
-    root: info

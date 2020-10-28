@@ -3,7 +3,7 @@ package com.einschpanner.catchup.post.service;
 import com.einschpanner.catchup.post.exception.PostNotFoundException;
 import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
-import com.einschpanner.catchup.domain.post.repository.PostRepository;
+import com.einschpanner.catchup.domain.post.dao.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
