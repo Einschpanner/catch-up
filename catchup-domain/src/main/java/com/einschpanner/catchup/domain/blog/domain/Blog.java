@@ -1,5 +1,6 @@
 package com.einschpanner.catchup.domain.blog.domain;
 
+import com.einschpanner.catchup.domain.BaseTimeEntity;
 import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Blog {
+public class Blog extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,30 +31,27 @@ public class Blog {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
-    private String email;
-
     @Column(nullable = false, unique = true)
     private String link;
 
     @Column
     private int cntLike;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
     @Column
     private LocalDateTime publishedDate;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
-
     public Blog updateBlog(Blog blog){
         this.title = blog.getTitle();
         this.description = blog.getDescription();
-        this.email = blog.getEmail();
         this.publishedDate = blog.getPublishedDate();
         return this;
+    }
+
+    public void initCntLike(){
+        this.cntLike = 0;
     }
 }

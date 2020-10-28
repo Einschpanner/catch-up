@@ -94,7 +94,6 @@ public class UpdateUserBlogConfig {
                     String title = entry.getTitle();
                     String link = entry.getLink();
                     String description = getDescription(entry.getDescription().getValue());
-                    System.out.println(description);
                     LocalDateTime publishedDate = new java.sql.Timestamp(
                             entry.getPublishedDate().getTime()).toLocalDateTime();
 
@@ -102,9 +101,7 @@ public class UpdateUserBlogConfig {
                             .title(title)
                             .link(link)
                             .description(description)
-                            .cntLike(0)
                             .publishedDate(publishedDate)
-                            .email(user.getEmail())
                             .user(user)
                             .build();
                     blogs.add(blog);
@@ -141,11 +138,12 @@ public class UpdateUserBlogConfig {
     @Transactional
     void saveOrUpdate(List<Blog> blogs){
         for (Blog blog : blogs) {
-            Optional<Blog> blogOptional = blogRepository.findByLink(blog.getLink());
-            if (blogOptional.isPresent()) {
-                Blog present = blogOptional.get();
+            Optional<Blog> optional = blogRepository.findByLink(blog.getLink());
+            if (optional.isPresent()) {
+                Blog present = optional.get();
                 blogRepository.save(present.updateBlog(blog));
             } else {
+                blog.initCntLike();
                 blogRepository.save(blog);
             }
         }
