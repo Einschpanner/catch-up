@@ -86,7 +86,7 @@ class PostTagControllerTest extends ApiDocumentationTest {
                 .content(objectMapper.writeValueAsString(req)))
                 .andDo(print())
                 .andExpect(status().isNoContent())
-                .andDo(document("delete-postTag," +
+                .andDo(document("delete-postTag",
                         requestFields(
                                 fieldWithPath("postId").type(JsonFieldType.NUMBER).description("포스트 아이디"),
                                 fieldWithPath("postTags").type(JsonFieldType.ARRAY).description("포스트 태그 리스트")

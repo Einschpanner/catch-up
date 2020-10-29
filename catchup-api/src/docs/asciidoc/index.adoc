@@ -102,6 +102,21 @@ operation::get-postCommentReplies[snippets='http-request,path-parameters']
 
 operation::delete-postComment[snippets='http-request,path-parameters']
 
+[[create-postTag]]
+=== 포스트 태그 생성
+
+operation::create-postTag[snippets='http-request,request-fields']
+
+[[get-postTagList]]
+=== 포스트 태그 리스트 가져오기
+
+operation::get-postTagList[snippets='http-request,path-parameters,http-response']
+
+[[delete-postTag]]
+=== 포스트 태그 삭제
+
+operation::delete-postTag[snippets='http-request,request-fields']
+
 [[Auth]]
 === 권한 정보
 
