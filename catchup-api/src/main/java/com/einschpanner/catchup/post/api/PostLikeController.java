@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.post.controller;
+package com.einschpanner.catchup.post.api;
 
 import com.einschpanner.catchup.domain.post.domain.PostLike;
 import com.einschpanner.catchup.domain.user.dto.UserDto;
@@ -19,7 +19,7 @@ public class PostLikeController {
 
     private final PostLikeService postLikeService;
 
-    @PostMapping("/{postId}/like")
+    @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void togglePostLike(
             @PathVariable final Long postId
@@ -29,7 +29,7 @@ public class PostLikeController {
         postLikeService.toggle(postId, userId);
     }
 
-    @GetMapping("/{postId}/like")
+    @GetMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto.Res> findAllPostLikes(
             @PathVariable final Long postId
