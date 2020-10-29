@@ -1,13 +1,16 @@
 package com.einschpanner.catchup.global.common;
 
 import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
+import com.einschpanner.catchup.domain.post.repository.PostTagQueryRepository;
 import com.einschpanner.catchup.global.common.config.TestConfig;
 import com.einschpanner.catchup.global.security.config.SecurityConfig;
 import com.einschpanner.catchup.global.security.controller.AuthController;
 import com.einschpanner.catchup.post.controller.PostCommentController;
 import com.einschpanner.catchup.post.controller.PostController;
+import com.einschpanner.catchup.post.controller.PostTagController;
 import com.einschpanner.catchup.post.service.PostCommentService;
 import com.einschpanner.catchup.post.service.PostService;
+import com.einschpanner.catchup.post.service.PostTagService;
 import com.einschpanner.catchup.user.api.UserController;
 import com.einschpanner.catchup.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +32,8 @@ import org.springframework.test.web.servlet.MockMvc;
         AuthController.class,
         PostController.class,
         PostCommentController.class,
-        UserController.class
+        UserController.class,
+        PostTagController.class
 },
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
@@ -59,4 +63,10 @@ public abstract class ApiDocumentationTest {
   
     @MockBean
     protected UserService userService;
+
+    @MockBean
+    protected PostTagService postTagService;
+
+    @MockBean
+    protected PostTagQueryRepository postTagQueryRepository;
 }
