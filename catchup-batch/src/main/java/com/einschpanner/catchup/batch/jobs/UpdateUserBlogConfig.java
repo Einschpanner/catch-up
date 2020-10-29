@@ -16,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
@@ -25,6 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -56,6 +58,7 @@ public class UpdateUserBlogConfig {
     }
 
     @Bean
+    @JobScope
     public Step updateUserBlogJobStep(
             StepBuilderFactory stepBuilderFactory
     ) {

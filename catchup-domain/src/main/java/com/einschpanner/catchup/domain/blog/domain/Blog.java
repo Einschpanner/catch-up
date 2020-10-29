@@ -37,6 +37,9 @@ public class Blog extends BaseTimeEntity {
     @Column
     private int cntLike;
 
+    @Column
+    private String urlThumbnail;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
