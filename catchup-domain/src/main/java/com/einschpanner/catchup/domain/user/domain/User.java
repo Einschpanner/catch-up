@@ -84,4 +84,20 @@ public class User extends BaseTimeEntity {
 
         return this;
     }
+
+    public void plusFollowerCount(){
+        this.cntFollower++;
+    }
+
+    public void minusFollowerCount(){
+        this.cntFollower--;
+    }
+
+    public void plusFollowingCount(){
+        this.cntFollowing++;
+    }
+
+    public void minusFollowingCount(){
+        this.cntFollowing--;
+    }
 }

@@ -80,6 +80,45 @@ Catch-Up;
 
 operation::create-post[snippets='http-request,request-fields']
 
+[[find-all-post]]
+=== 모든 포스팅 조회
+
+operation::find-all-post[snippets='http-request,http-response']
+
+[[find-post]]
+=== 포스트 상세 조회
+
+operation::find-post[snippets='http-request,path-parameters,http-response']
+
+[[update-post]]
+=== 포스트 업데이트
+
+operation::update-post[snippets='http-request,path-parameters,request-fields,http-response']
+
+[[delete-post]]
+=== 특정 포스트 삭제
+
+operation::delete-post[snippets='http-request,path-parameters']
+
+[[find-post-likes]]
+=== 특정 게시글을 좋아요한 PostLike(사용자) 모두 찾기
+
+operation::find-post-likes[snippets='http-request,path-parameters,http-response']
+
+[[toggle-follow]]
+=== 팔로우 추가 or 삭제
+
+operation::toggle-follow[snippets='http-request,path-parameters,http-response']
+
+[[find-following]]
+=== 특정 ID가 팔로잉하는 사용자 리스트 불러오기
+
+operation::find-following[snippets='http-request,path-parameters,http-response']
+
+[[find-follower]]
+=== 특정 ID의 팔로워 리스트 불러오기
+
+operation::find-follower[snippets='http-request,path-parameters,http-response']
 
 [[create-postComment]]
 === 포스트 댓글 생성
@@ -90,12 +129,12 @@ operation::create-postComment[snippets='http-request,request-fields']
 [[get-postComments]]
 === 포스트 댓글 가져오기
 
-operation::get-postComments[snippets='http-request,path-parameters']
+operation::get-postComments[snippets='http-request,path-parameters,http-response']
 
 [[get-postCommentReplies]]
 === 포스트 대댓글 가져오기
 
-operation::get-postCommentReplies[snippets='http-request,path-parameters']
+operation::get-postCommentReplies[snippets='http-request,path-parameters,http-response']
 
 [[delete-postComment]]
 === 포스트 댓글 삭제
@@ -110,4 +149,5 @@ operation::auth[snippets='http-request']
 [[get-profile]]
 === 프로필 정보 가져오기
 
-operation::get-profile[snippets='http-request,path-parameters']
+operation::get-profile[snippets='http-request,path-parameters,http-response']
+
