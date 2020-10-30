@@ -2,10 +2,7 @@ package com.einschpanner.catchup.domain.blog.domain;
 
 import com.einschpanner.catchup.domain.BaseTimeEntity;
 import com.einschpanner.catchup.domain.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -40,16 +37,17 @@ public class Blog extends BaseTimeEntity {
     @Column
     private String urlThumbnail;
 
+    @Column
+    private LocalDateTime publishedDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @Column
-    private LocalDateTime publishedDate;
-
     public Blog updateBlog(Blog blog){
         this.title = blog.getTitle();
         this.description = blog.getDescription();
+        this.urlThumbnail = blog.getUrlThumbnail();
         this.publishedDate = blog.getPublishedDate();
         return this;
     }

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -20,11 +22,14 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -45,10 +50,10 @@ public class BlogRssParserConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
+    private final EntityManagerFactory entityManagerFactory;
     private final BlogRssParserJobParameter jobParameter; // 생성한 빈을 바로 DI 받는다.
 
-    private final UserQueryRepository userQueryRepository;
-    private final BlogRepository blogRepository;
+    private final int chunkSize = 10;
 
     @Bean
     @JobScope
@@ -70,7 +75,7 @@ public class BlogRssParserConfig {
     public Step step() {
         log.info("********** This is " + STEP_NAME);
         return stepBuilderFactory.get(STEP_NAME)
-                .<User, List<Blog>>chunk(10)
+                .<User, List<Blog>>chunk(chunkSize)
                 .reader(this.reader())
                 .processor(this.processor())
                 .writer(this.writer())
@@ -78,11 +83,24 @@ public class BlogRssParserConfig {
     }
 
     @Bean
-    public ListItemReader<User> reader() {
+    public JpaPagingItemReader<User> reader() {
+        final String query =
+                "SELECT u " +
+                "FROM User u " +
+                "JOIN FETCH u.blogs ub " +
+                "WHERE u.addrRss IS NOT NULL " +
+                "ORDER BY u.userId";
+
         log.info("********** This is " + JOB_NAME + "_reader");
-        List<User> users = userQueryRepository.findAllByExistsBlogRss();
-        log.info("          - activeMember SIZE : " + users.size());
-        return new ListItemReader<>(users);
+//        List<User> users = userQueryRepository.findAllByExistsBlogRss();
+//        log.info("          - activeMember SIZE : " + users.size());
+//        return new ListItemReader<>(users);
+        return new JpaPagingItemReaderBuilder<User>()
+                .name("reader")
+                .entityManagerFactory(entityManagerFactory)
+                .pageSize(chunkSize)
+                .queryString(query)
+                .build();
     }
 
     // 비즈니스 로직
@@ -97,22 +115,11 @@ public class BlogRssParserConfig {
                 URL feedSource = new URL(user.getAddrRss());
                 SyndFeedInput input = new SyndFeedInput();
                 SyndFeed feed = input.build(new XmlReader(feedSource));
-                for (int i = 0; i < feed.getEntries().size(); i++) {
-                    SyndEntry entry = (SyndEntry) feed.getEntries().get(i);
 
-                    String title = entry.getTitle();
-                    String link = entry.getLink();
-                    String description = getDescription(entry.getDescription().getValue());
-                    LocalDateTime publishedDate = new java.sql.Timestamp(
-                            entry.getPublishedDate().getTime()).toLocalDateTime();
+                for (Object object : feed.getEntries()) {
+                    SyndEntry entry = (SyndEntry) object;
 
-                    Blog blog = Blog.builder()
-                            .title(title)
-                            .link(link)
-                            .description(description)
-                            .publishedDate(publishedDate)
-                            .user(user)
-                            .build();
+                    Blog blog = buildBlog(user, entry);
                     blogs.add(blog);
                 }
             } catch (FeedException | IOException e) {
@@ -126,13 +133,30 @@ public class BlogRssParserConfig {
     @Bean
     public ItemWriter<List<Blog>> writer() {
         log.info("********** This is " + JOB_NAME + "_writer");
-        return (
-                (List<? extends List<Blog>> allBlogs) -> {
-                    for (List<Blog> blogs : allBlogs) {
-                        saveOrUpdate(blogs);
-                    }
+        return items -> {
+            for (List<Blog> list : items) {
+                for (Blog blog : list) {
+                    log.info(blog.toString());
                 }
-        );
+            }
+        };
+    }
+
+    private Blog buildBlog(User user, SyndEntry entry) throws IOException {
+        String title = entry.getTitle();
+        String link = entry.getLink();
+        String description = getDescription(entry.getDescription().getValue());
+        String urlThumbnail = getUrlThumbnail(link);
+        LocalDateTime publishedDate = getLocalDateTime(entry.getPublishedDate().getTime());
+
+        return Blog.builder()
+                .title(title)
+                .link(link)
+                .description(description)
+                .urlThumbnail(urlThumbnail)
+                .publishedDate(publishedDate)
+                .user(user)
+                .build();
     }
 
     private String getDescription(String parsing) {
@@ -145,17 +169,44 @@ public class BlogRssParserConfig {
         return description;
     }
 
-    @Transactional
-    void saveOrUpdate(List<Blog> blogs){
-        for (Blog blog : blogs) {
-            Optional<Blog> optional = blogRepository.findByLink(blog.getLink());
-            if (optional.isPresent()) {
-                Blog present = optional.get();
-                blogRepository.save(present.updateBlog(blog));
-            } else {
-                blog.initCntLike();
-                blogRepository.save(blog);
-            }
-        }
+    /**
+     * URL 썸네일 가져오기
+     * + Naver Blog 같은 경우 iframe에 감춰져 있었음
+     */
+    private String getUrlThumbnail(String url) throws IOException {
+        String urlThumbnail = null;
+
+        Document doc = Jsoup.connect(url).timeout(4000).get();
+        urlThumbnail = doc.select("meta[property=og:image]").attr("content");
+        if (!urlThumbnail.isEmpty()) return urlThumbnail;
+
+        Elements elements = doc.select("iframe[src]");
+        if (elements.isEmpty()) return null;
+
+        String iframeUrl = elements.get(0).attr("abs:src");
+        doc = Jsoup.connect(iframeUrl).timeout(4000).get();
+        urlThumbnail = doc.select("meta[property=og:image]").attr("content");
+        return urlThumbnail;
     }
+
+    /**
+     * Date to LocalDateTime 메서드
+     */
+    private LocalDateTime getLocalDateTime(long time) {
+        return new java.sql.Timestamp(time).toLocalDateTime();
+    }
+
+//    @Transactional
+//    void saveOrUpdate(List<Blog> blogs) {
+//        for (Blog blog : blogs) {
+//            Optional<Blog> optional = blogRepository.findByLink(blog.getLink());
+//            if (optional.isPresent()) {
+//                Blog present = optional.get();
+//                blogRepository.save(present.updateBlog(blog));
+//            } else {
+//                blog.initCntLike();
+//                blogRepository.save(blog);
+//            }
+//        }
+//    }
 }
