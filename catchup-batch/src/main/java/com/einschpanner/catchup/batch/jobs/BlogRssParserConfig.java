@@ -1,8 +1,8 @@
 package com.einschpanner.catchup.batch.jobs;
 
-import com.einschpanner.catchup.domain.blog.dao.BlogRepository;
+import com.einschpanner.catchup.batch.common.reader.JpaNoOffsetPagingItemReader;
+import com.einschpanner.catchup.batch.common.writer.JpaItemListWriter;
 import com.einschpanner.catchup.domain.blog.domain.Blog;
-import com.einschpanner.catchup.domain.user.dao.UserQueryRepository;
 import com.einschpanner.catchup.domain.user.domain.User;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -21,13 +20,10 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
-import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
-import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
@@ -39,6 +35,7 @@ import java.util.Optional;
 
 /**
  * Ref : https://ahndy84.tistory.com/19?category=339592
+ * Reader와 Processor에서는 1건씩 다뤄지고, Writer에선 Chunk 단위로 처리된다는 것만 기억
  */
 
 @Slf4j
@@ -53,7 +50,7 @@ public class BlogRssParserConfig {
     private final EntityManagerFactory entityManagerFactory;
     private final BlogRssParserJobParameter jobParameter; // 생성한 빈을 바로 DI 받는다.
 
-    private final int chunkSize = 10;
+    private final int chunkSize = 1;
 
     @Bean
     @JobScope
@@ -70,44 +67,39 @@ public class BlogRssParserConfig {
                 .build();
     }
 
-    @Bean(name = STEP_NAME)
-    @JobScope
     public Step step() {
         log.info("********** This is " + STEP_NAME);
         return stepBuilderFactory.get(STEP_NAME)
                 .<User, List<Blog>>chunk(chunkSize)
-                .reader(this.reader())
-                .processor(this.processor())
-                .writer(this.writer())
+                .reader(reader())
+                .processor(processor())
+                .writer(writerList())
                 .build();
     }
 
-    @Bean
     public JpaPagingItemReader<User> reader() {
+        log.info("********** This is " + JOB_NAME + "_reader");
+
         final String query =
                 "SELECT u " +
                 "FROM User u " +
-                "JOIN FETCH u.blogs ub " +
                 "WHERE u.addrRss IS NOT NULL " +
                 "ORDER BY u.userId";
 
-        log.info("********** This is " + JOB_NAME + "_reader");
-//        List<User> users = userQueryRepository.findAllByExistsBlogRss();
-//        log.info("          - activeMember SIZE : " + users.size());
-//        return new ListItemReader<>(users);
-        return new JpaPagingItemReaderBuilder<User>()
-                .name("reader")
-                .entityManagerFactory(entityManagerFactory)
-                .pageSize(chunkSize)
-                .queryString(query)
-                .build();
+        JpaPagingItemReader<User> reader = new JpaPagingItemReader<>();
+        reader.setName("reader");
+        reader.setEntityManagerFactory(entityManagerFactory);
+        reader.setPageSize(chunkSize);
+        reader.setQueryString(query);
+
+        return reader;
     }
 
     // 비즈니스 로직
-    @Bean
     public ItemProcessor<User, List<Blog>> processor() {
         return user -> {
             log.info("********** This is " + JOB_NAME + "_processor");
+            log.info(user.toString());
 
             List<Blog> blogs = new ArrayList<>();
 
@@ -119,8 +111,16 @@ public class BlogRssParserConfig {
                 for (Object object : feed.getEntries()) {
                     SyndEntry entry = (SyndEntry) object;
 
-                    Blog blog = buildBlog(user, entry);
-                    blogs.add(blog);
+                    Blog newBlog = buildBlog(user, entry);
+                    Blog currentBlog = user.getBlogs()
+                            .stream()
+                            .filter(current -> current.getLink().equals(newBlog.getLink()))
+                            .findFirst()
+                            .orElseGet(Blog::new);
+
+                    currentBlog.updateBlog(newBlog);
+
+                    blogs.add(currentBlog);
                 }
             } catch (FeedException | IOException e) {
                 e.printStackTrace();
@@ -130,19 +130,17 @@ public class BlogRssParserConfig {
         };
     }
 
-    @Bean
-    public ItemWriter<List<Blog>> writer() {
+    private JpaItemListWriter<Blog> writerList() {
         log.info("********** This is " + JOB_NAME + "_writer");
-        return items -> {
-            for (List<Blog> list : items) {
-                for (Blog blog : list) {
-                    log.info(blog.toString());
-                }
-            }
-        };
+
+        JpaItemWriter<Blog> writer = new JpaItemWriter<>();
+        writer.setEntityManagerFactory(entityManagerFactory);
+
+        return new JpaItemListWriter<>(writer);
     }
 
     private Blog buildBlog(User user, SyndEntry entry) throws IOException {
+
         String title = entry.getTitle();
         String link = entry.getLink();
         String description = getDescription(entry.getDescription().getValue());
@@ -156,9 +154,13 @@ public class BlogRssParserConfig {
                 .urlThumbnail(urlThumbnail)
                 .publishedDate(publishedDate)
                 .user(user)
+                .cntLike(0)
                 .build();
     }
 
+    /**
+     * 페이지 Description 가져오기
+     */
     private String getDescription(String parsing) {
         Document doc = Jsoup.parse(parsing);
         String description = doc.text();
@@ -171,12 +173,12 @@ public class BlogRssParserConfig {
 
     /**
      * URL 썸네일 가져오기
-     * + Naver Blog 같은 경우 iframe에 감춰져 있었음
+     * + Naver Blog 같은 경우 iframe에 감춰져 있어 한 번 더 검사함
      */
     private String getUrlThumbnail(String url) throws IOException {
         String urlThumbnail = null;
 
-        Document doc = Jsoup.connect(url).timeout(4000).get();
+        Document doc = Jsoup.connect(url).timeout(5000).get();
         urlThumbnail = doc.select("meta[property=og:image]").attr("content");
         if (!urlThumbnail.isEmpty()) return urlThumbnail;
 
@@ -184,7 +186,7 @@ public class BlogRssParserConfig {
         if (elements.isEmpty()) return null;
 
         String iframeUrl = elements.get(0).attr("abs:src");
-        doc = Jsoup.connect(iframeUrl).timeout(4000).get();
+        doc = Jsoup.connect(iframeUrl).timeout(3000).get();
         urlThumbnail = doc.select("meta[property=og:image]").attr("content");
         return urlThumbnail;
     }

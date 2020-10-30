@@ -22,6 +22,7 @@ spring:
     job:
       names: ${job.name:NONE}
 
-#logging:
-#  level:
-#    org.hibernate.SQL: debug
+logging:
+  level:
+    org.hibernate.SQL: debug
+#    org.hibernate.type: trace

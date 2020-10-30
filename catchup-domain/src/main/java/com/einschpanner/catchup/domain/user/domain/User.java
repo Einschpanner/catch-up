@@ -3,10 +3,7 @@ package com.einschpanner.catchup.domain.user.domain;
 import com.einschpanner.catchup.domain.BaseTimeEntity;
 import com.einschpanner.catchup.domain.blog.domain.Blog;
 import com.einschpanner.catchup.domain.user.dto.ProfileDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class User extends BaseTimeEntity {
 
     @Id
