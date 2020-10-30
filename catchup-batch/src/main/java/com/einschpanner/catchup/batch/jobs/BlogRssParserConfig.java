@@ -18,7 +18,6 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.ListItemReader;
@@ -26,7 +25,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -41,49 +39,57 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class UpdateUserBlogConfig {
+public class BlogRssParserConfig {
+    public static final String JOB_NAME = "blogRssParserJob";
+    public static final String STEP_NAME = JOB_NAME + "_step";
+
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
+    private final BlogRssParserJobParameter jobParameter; // 생성한 빈을 바로 DI 받는다.
+
     private final UserQueryRepository userQueryRepository;
     private final BlogRepository blogRepository;
 
     @Bean
-    public Job updateUserBlogJob(
-            JobBuilderFactory jobBuilderFactory,
-            Step updateUserBlogJobStep
-    ) {
-        log.info("********** This is updateUserBlogJob");
-        return jobBuilderFactory.get("updateUserBlogJob")
-//                .preventRestart()
-                .start(updateUserBlogJobStep)
-                .build();
-    }
-
-    @Bean
     @JobScope
-    public Step updateUserBlogJobStep(
-            StepBuilderFactory stepBuilderFactory
-    ) {
-        log.info("********** This is updateUserBlogJobStep");
-        return stepBuilderFactory.get("updateUserBlogJobStep")
+    public BlogRssParserJobParameter jobParameter() {
+        return new BlogRssParserJobParameter();
+    }
+
+    @Bean(name = JOB_NAME)
+    public Job job() {
+        log.info("********** This is " + JOB_NAME);
+        return jobBuilderFactory.get(JOB_NAME)
+//                .preventRestart()
+                .start(step())
+                .build();
+    }
+
+    @Bean(name = STEP_NAME)
+    @JobScope
+    public Step step() {
+        log.info("********** This is " + STEP_NAME);
+        return stepBuilderFactory.get(STEP_NAME)
                 .<User, List<Blog>>chunk(10)
-                .reader(this.updateUserBlogReader())
-                .processor(this.updateUserBlogProcessor())
-                .writer(this.updateUserBlogWriter())
+                .reader(this.reader())
+                .processor(this.processor())
+                .writer(this.writer())
                 .build();
     }
 
     @Bean
-    @StepScope
-    public ListItemReader<User> updateUserBlogReader() {
-        log.info("********** This is updateUserBlogReader");
+    public ListItemReader<User> reader() {
+        log.info("********** This is " + JOB_NAME + "_reader");
         List<User> users = userQueryRepository.findAllByExistsBlogRss();
         log.info("          - activeMember SIZE : " + users.size());
         return new ListItemReader<>(users);
     }
 
     // 비즈니스 로직
-    public ItemProcessor<User, List<Blog>> updateUserBlogProcessor() {
+    @Bean
+    public ItemProcessor<User, List<Blog>> processor() {
         return user -> {
-            log.info("********** This is updateUserBlogProcessor");
+            log.info("********** This is " + JOB_NAME + "_processor");
 
             List<Blog> blogs = new ArrayList<>();
 
@@ -117,8 +123,9 @@ public class UpdateUserBlogConfig {
         };
     }
 
-    public ItemWriter<List<Blog>> updateUserBlogWriter() {
-        log.info("********** This is updateUserBlogWriter");
+    @Bean
+    public ItemWriter<List<Blog>> writer() {
+        log.info("********** This is " + JOB_NAME + "_writer");
         return (
                 (List<? extends List<Blog>> allBlogs) -> {
                     for (List<Blog> blogs : allBlogs) {
