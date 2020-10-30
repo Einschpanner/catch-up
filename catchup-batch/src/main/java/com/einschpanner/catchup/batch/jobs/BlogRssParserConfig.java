@@ -1,6 +1,5 @@
 package com.einschpanner.catchup.batch.jobs;
 
-import com.einschpanner.catchup.batch.common.reader.JpaNoOffsetPagingItemReader;
 import com.einschpanner.catchup.batch.common.writer.JpaItemListWriter;
 import com.einschpanner.catchup.domain.blog.domain.Blog;
 import com.einschpanner.catchup.domain.user.domain.User;
@@ -50,7 +49,7 @@ public class BlogRssParserConfig {
     private final EntityManagerFactory entityManagerFactory;
     private final BlogRssParserJobParameter jobParameter; // 생성한 빈을 바로 DI 받는다.
 
-    private final int chunkSize = 1;
+    private final int chunkSize = 5;
 
     @Bean
     @JobScope
@@ -81,8 +80,9 @@ public class BlogRssParserConfig {
         log.info("********** This is " + JOB_NAME + "_reader");
 
         final String query =
-                "SELECT u " +
+                "SELECT DISTINCT u " +
                 "FROM User u " +
+                "LEFT JOIN FETCH u.blogs ub " +
                 "WHERE u.addrRss IS NOT NULL " +
                 "ORDER BY u.userId";
 
@@ -99,7 +99,7 @@ public class BlogRssParserConfig {
     public ItemProcessor<User, List<Blog>> processor() {
         return user -> {
             log.info("********** This is " + JOB_NAME + "_processor");
-            log.info(user.toString());
+            log.info("userId : {}, name : {}", user.getUserId(), user.getNickname());
 
             List<Blog> blogs = new ArrayList<>();
 
@@ -112,20 +112,24 @@ public class BlogRssParserConfig {
                     SyndEntry entry = (SyndEntry) object;
 
                     Blog newBlog = buildBlog(user, entry);
-                    Blog currentBlog = user.getBlogs()
+                    Optional<Blog> optional = user.getBlogs()
                             .stream()
                             .filter(current -> current.getLink().equals(newBlog.getLink()))
-                            .findFirst()
-                            .orElseGet(Blog::new);
+                            .findFirst();
 
-                    currentBlog.updateBlog(newBlog);
-
-                    blogs.add(currentBlog);
+                    if (optional.isPresent()) {
+                        Blog currentBlog = optional.get();
+                        currentBlog.updateBlog(newBlog);
+                        blogs.add(currentBlog);
+                    } else {
+                        blogs.add(newBlog);
+                    }
                 }
             } catch (FeedException | IOException e) {
                 e.printStackTrace();
             }
 
+            log.info("{}", blogs.size());
             return blogs;
         };
     }

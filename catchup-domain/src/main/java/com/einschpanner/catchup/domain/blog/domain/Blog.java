@@ -51,8 +51,4 @@ public class Blog extends BaseTimeEntity {
         this.publishedDate = blog.getPublishedDate();
         return this;
     }
-
-    public void initCntLike(){
-        this.cntLike = 0;
-    }
 }
