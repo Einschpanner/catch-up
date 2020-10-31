@@ -187,20 +187,27 @@ public class BlogRssParserConfig {
     /**
      * URL 썸네일 가져오기
      * + Naver Blog 같은 경우 iframe에 감춰져 있어 한 번 더 검사함
+     * + 그래도 없으면 img 태그 서치
      */
     private String getUrlThumbnail(String url) throws IOException {
         String urlThumbnail = null;
 
+        // open graph 태그 검사
         Document doc = Jsoup.connect(url).timeout(5000).get();
         urlThumbnail = doc.select("meta[property=og:image]").attr("content");
         if (!urlThumbnail.isEmpty()) return urlThumbnail;
 
+        // iframe 검사
         Elements elements = doc.select("iframe[src]");
-        if (elements.isEmpty()) return null;
+        if (!elements.isEmpty()) {
+            String iframeUrl = elements.first().attr("abs:src");
+            Document iframeDoc = Jsoup.connect(iframeUrl).timeout(3000).get();
+            urlThumbnail = iframeDoc.select("meta[property=og:image]").attr("content");
+            if (!urlThumbnail.isEmpty()) return urlThumbnail;
+        }
 
-        String iframeUrl = elements.get(0).attr("abs:src");
-        doc = Jsoup.connect(iframeUrl).timeout(3000).get();
-        urlThumbnail = doc.select("meta[property=og:image]").attr("content");
+        // img 태그 검사
+        urlThumbnail = doc.getElementsByTag("img").first().absUrl("src");
         return urlThumbnail;
     }
 
