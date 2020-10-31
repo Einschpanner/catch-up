@@ -101,29 +101,12 @@ public class BlogRssParserConfig {
             log.info("********** This is " + JOB_NAME + "_processor");
             log.info("userId : {}, name : {}", user.getUserId(), user.getNickname());
 
-            List<Blog> userBlog = user.getBlogs();
-
             Map<String, Blog> map = new HashMap<>();
-            for (Blog b : userBlog) map.put(b.getLink(), b);
+            List<Blog> blogs = user.getBlogs();
+            for (Blog b : blogs) map.put(b.getLink(), b);
 
             List<Blog> results = new ArrayList<>();
-            List<Blog> newBlogs = new ArrayList<>();
-
-            try {
-                URL feedSource = new URL(user.getAddrRss());
-                SyndFeedInput input = new SyndFeedInput();
-                SyndFeed feed = input.build(new XmlReader(feedSource));
-
-                for (Object object : feed.getEntries()) {
-                    SyndEntry entry = (SyndEntry) object;
-
-                    Blog newBlog = buildBlog(user, entry);
-                    newBlogs.add(newBlog);
-                }
-            } catch (FeedException | IOException e) {
-                e.printStackTrace();
-            }
-
+            List<Blog> newBlogs = buildBlogList(user);
             for (Blog newBlog : newBlogs) {
                 String link = newBlog.getLink();
                 Blog exists = map.get(link);
@@ -136,7 +119,7 @@ public class BlogRssParserConfig {
         };
     }
 
-    private JpaItemListWriter<Blog> writerList() {
+    private JpaItemWriter<List<Blog>> writerList() {
         log.info("********** This is " + JOB_NAME + "_writer");
 
         JpaItemWriter<Blog> writer = new JpaItemWriter<>();
@@ -145,6 +128,30 @@ public class BlogRssParserConfig {
         return new JpaItemListWriter<>(writer);
     }
 
+    private List<Blog> buildBlogList(User user){
+        List<Blog> newBlogs = new ArrayList<>();
+
+        try {
+            URL feedSource = new URL(user.getAddrRss());
+            SyndFeedInput input = new SyndFeedInput();
+            SyndFeed feed = input.build(new XmlReader(feedSource));
+
+            for (Object object : feed.getEntries()) {
+                SyndEntry entry = (SyndEntry) object;
+
+                Blog newBlog = buildBlog(user, entry);
+                newBlogs.add(newBlog);
+            }
+        } catch (FeedException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return newBlogs;
+    }
+
+    /**
+     * User, SyndEntry로 새로운 Blog 인스턴스 생성
+     */
     private Blog buildBlog(User user, SyndEntry entry) throws IOException {
 
         String title = entry.getTitle();
