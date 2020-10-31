@@ -19,6 +19,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.context.annotation.Bean;
@@ -28,9 +29,7 @@ import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Ref : https://ahndy84.tistory.com/19?category=339592
@@ -82,7 +81,7 @@ public class BlogRssParserConfig {
         final String query =
                 "SELECT DISTINCT u " +
                 "FROM User u " +
-                "LEFT JOIN FETCH u.blogs ub " +
+                "LEFT JOIN FETCH u.blogs " +
                 "WHERE u.addrRss IS NOT NULL " +
                 "ORDER BY u.userId";
 
@@ -98,10 +97,17 @@ public class BlogRssParserConfig {
     // 비즈니스 로직
     public ItemProcessor<User, List<Blog>> processor() {
         return user -> {
+
             log.info("********** This is " + JOB_NAME + "_processor");
             log.info("userId : {}, name : {}", user.getUserId(), user.getNickname());
 
-            List<Blog> blogs = new ArrayList<>();
+            List<Blog> userBlog = user.getBlogs();
+
+            Map<String, Blog> map = new HashMap<>();
+            for (Blog b : userBlog) map.put(b.getLink(), b);
+
+            List<Blog> results = new ArrayList<>();
+            List<Blog> newBlogs = new ArrayList<>();
 
             try {
                 URL feedSource = new URL(user.getAddrRss());
@@ -112,25 +118,21 @@ public class BlogRssParserConfig {
                     SyndEntry entry = (SyndEntry) object;
 
                     Blog newBlog = buildBlog(user, entry);
-                    Optional<Blog> optional = user.getBlogs()
-                            .stream()
-                            .filter(current -> current.getLink().equals(newBlog.getLink()))
-                            .findFirst();
-
-                    if (optional.isPresent()) {
-                        Blog currentBlog = optional.get();
-                        currentBlog.updateBlog(newBlog);
-                        blogs.add(currentBlog);
-                    } else {
-                        blogs.add(newBlog);
-                    }
+                    newBlogs.add(newBlog);
                 }
             } catch (FeedException | IOException e) {
                 e.printStackTrace();
             }
 
-            log.info("{}", blogs.size());
-            return blogs;
+            for (Blog newBlog : newBlogs) {
+                String link = newBlog.getLink();
+                Blog exists = map.get(link);
+                if (exists == null) results.add(newBlog);
+                else results.add(exists.updateBlog(newBlog));
+            }
+
+            log.info("{}", results.size());
+            return results;
         };
     }
 
@@ -201,18 +203,4 @@ public class BlogRssParserConfig {
     private LocalDateTime getLocalDateTime(long time) {
         return new java.sql.Timestamp(time).toLocalDateTime();
     }
-
-//    @Transactional
-//    void saveOrUpdate(List<Blog> blogs) {
-//        for (Blog blog : blogs) {
-//            Optional<Blog> optional = blogRepository.findByLink(blog.getLink());
-//            if (optional.isPresent()) {
-//                Blog present = optional.get();
-//                blogRepository.save(present.updateBlog(blog));
-//            } else {
-//                blog.initCntLike();
-//                blogRepository.save(blog);
-//            }
-//        }
-//    }
 }
