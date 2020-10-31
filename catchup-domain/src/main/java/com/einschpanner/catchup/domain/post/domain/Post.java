@@ -1,7 +1,7 @@
 package com.einschpanner.catchup.domain.post.domain;
+
 import com.einschpanner.catchup.domain.BaseTimeEntity;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
-import com.einschpanner.catchup.domain.tag.domain.Tag;
 import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.*;
 
@@ -48,12 +48,12 @@ public class Post extends BaseTimeEntity {
     @Setter
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "tagId")
-    private List<Tag> tags;
+    @OneToMany(mappedBy = "post")
+    private List<PostTag> postTags;
 
     /**
      * Update Dto to Post
+     *
      * @param dto
      */
     public void updateMyPost(PostDto.UpdateReq dto) {

@@ -1,6 +1,7 @@
 package com.einschpanner.catchup.global.common.testFactory.post;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
+import com.einschpanner.catchup.domain.post.domain.PostTag;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
 import com.einschpanner.catchup.domain.tag.domain.Tag;
 import com.einschpanner.catchup.domain.user.domain.User;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class TestPostFactory {
 
-    public static Post createPost(Long postId, User user, List<Tag> tags){
+    public static Post createPost(Long postId, User user, List<PostTag> tags){
         return Post.builder()
                 .postId(postId)
                 .title("Test Title")
@@ -22,7 +23,7 @@ public class TestPostFactory {
                 .cntComment(0)
                 .isDeleted(false)
                 .user(user)
-                .tags(tags)
+                .postTags(tags)
                 .build();
     }
 
