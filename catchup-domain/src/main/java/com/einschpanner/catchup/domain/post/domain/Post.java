@@ -41,10 +41,11 @@ public class Post extends BaseTimeEntity {
 
     @Column
     @Setter
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @Setter
     private User user;
 
     @OneToMany(mappedBy = "post")
@@ -62,7 +63,7 @@ public class Post extends BaseTimeEntity {
         this.urlThumbnail = dto.getUrlThumbnail();
         this.cntLike = dto.getCntLike();
         this.cntComment = dto.getCntComment();
-        this.isDeleted = dto.isDeleted();
+        this.isDeleted = dto.getIsDeleted();
     }
 
     public void plusCommentCnt() {
@@ -81,5 +82,8 @@ public class Post extends BaseTimeEntity {
         this.cntLike--;
     }
 
+    public boolean isNotOwner(User user){
+        return !this.user.getUserId().equals(user.getUserId());
+    }
 }
 

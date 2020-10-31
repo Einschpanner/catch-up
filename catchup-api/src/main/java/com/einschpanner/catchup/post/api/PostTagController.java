@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.post.controller;
+package com.einschpanner.catchup.post.api;
 
 import com.einschpanner.catchup.domain.post.dto.PostTagDto;
 import com.einschpanner.catchup.domain.tag.dto.TagDto;
@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostTagController {
