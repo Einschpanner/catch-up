@@ -15,19 +15,24 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.*;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Ref : https://ahndy84.tistory.com/19?category=339592
@@ -83,7 +88,7 @@ public class BlogRssParserConfig {
         final String query =
                 "SELECT u " +
                 "FROM User u " +
-//                "LEFT JOIN FETCH u.blogs " +
+                "LEFT JOIN FETCH u.blogs " +
                 "WHERE u.addrRss IS NOT NULL " +
                 "ORDER BY u.userId";
 
@@ -116,6 +121,7 @@ public class BlogRssParserConfig {
                 else results.add(exists.update(newBlog));
             }
 
+            System.out.println(results);
             log.info("{}", results.size());
             return results;
         };

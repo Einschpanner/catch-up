@@ -24,5 +24,7 @@ spring:
 
 logging:
   level:
+    org.springframework:
+      batch.item.database: debug
     org.hibernate.SQL: debug
 #    org.hibernate.type: trace
