@@ -15,15 +15,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.*;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
@@ -65,6 +63,8 @@ public class BlogRssParserConfig {
                 .build();
     }
 
+    @Bean(name = STEP_NAME)
+    @JobScope
     public Step step() {
         log.info("********** This is " + STEP_NAME);
         return stepBuilderFactory.get(STEP_NAME)
@@ -75,13 +75,15 @@ public class BlogRssParserConfig {
                 .build();
     }
 
+    @Bean
+    @StepScope
     public JpaPagingItemReader<User> reader() {
         log.info("********** This is " + JOB_NAME + "_reader");
 
         final String query =
-                "SELECT DISTINCT u " +
+                "SELECT u " +
                 "FROM User u " +
-                "LEFT JOIN FETCH u.blogs " +
+//                "LEFT JOIN FETCH u.blogs " +
                 "WHERE u.addrRss IS NOT NULL " +
                 "ORDER BY u.userId";
 
@@ -102,7 +104,7 @@ public class BlogRssParserConfig {
             log.info("userId : {}, name : {}", user.getUserId(), user.getNickname());
 
             Map<String, Blog> map = new HashMap<>();
-            List<Blog> blogs = user.getBlogs();
+            List<Blog> blogs = user.getBlogs(); // 모든 블로그 select
             for (Blog b : blogs) map.put(b.getLink(), b);
 
             List<Blog> results = new ArrayList<>();
@@ -111,7 +113,7 @@ public class BlogRssParserConfig {
                 String link = newBlog.getLink();
                 Blog exists = map.get(link);
                 if (exists == null) results.add(newBlog);
-                else results.add(exists.updateBlog(newBlog));
+                else results.add(exists.update(newBlog));
             }
 
             log.info("{}", results.size());
@@ -119,7 +121,7 @@ public class BlogRssParserConfig {
         };
     }
 
-    private JpaItemWriter<List<Blog>> writerList() {
+    public JpaItemWriter<List<Blog>> writerList() {
         log.info("********** This is " + JOB_NAME + "_writer");
 
         JpaItemWriter<Blog> writer = new JpaItemWriter<>();

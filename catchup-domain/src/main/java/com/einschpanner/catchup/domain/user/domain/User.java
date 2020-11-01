@@ -56,7 +56,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Blog> blogs;
 
     public String getRolekey() {

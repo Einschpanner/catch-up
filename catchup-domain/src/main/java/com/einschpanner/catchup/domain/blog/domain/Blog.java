@@ -40,11 +40,11 @@ public class Blog extends BaseTimeEntity {
     @Column
     private LocalDateTime publishedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
-    public Blog updateBlog(Blog blog){
+    public Blog update(Blog blog){
         this.title = blog.getTitle();
         this.description = blog.getDescription();
         this.urlThumbnail = blog.getUrlThumbnail();
