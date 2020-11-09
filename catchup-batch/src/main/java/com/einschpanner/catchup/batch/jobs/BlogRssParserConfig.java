@@ -25,6 +25,7 @@ import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -73,7 +74,7 @@ public class BlogRssParserConfig {
     public Step step() {
         log.info("********** This is " + STEP_NAME);
         return stepBuilderFactory.get(STEP_NAME)
-                .<User, List<Blog>>chunk(chunkSize)
+                .<User, User>chunk(chunkSize)
                 .reader(reader())
                 .processor(processor())
                 .writer(writerList())
@@ -102,38 +103,38 @@ public class BlogRssParserConfig {
     }
 
     // 비즈니스 로직
-    public ItemProcessor<User, List<Blog>> processor() {
+    public ItemProcessor<User, User> processor() {
         return user -> {
-
             log.info("********** This is " + JOB_NAME + "_processor");
             log.info("userId : {}, name : {}", user.getUserId(), user.getNickname());
 
             Map<String, Blog> map = new HashMap<>();
-            List<Blog> blogs = user.getBlogs(); // 모든 블로그 select
-            for (Blog b : blogs) map.put(b.getLink(), b);
 
-            List<Blog> results = new ArrayList<>();
+            for (Blog b : user.getBlogs()) {
+                map.put(b.getLink(), b);
+                System.out.println(b.getTitle());
+            }
+
             List<Blog> newBlogs = buildBlogList(user);
             for (Blog newBlog : newBlogs) {
                 String link = newBlog.getLink();
                 Blog exists = map.get(link);
-                if (exists == null) results.add(newBlog);
-                else results.add(exists.update(newBlog));
+                if (exists == null) user.getBlogs().add(newBlog);
+                else exists.update(newBlog); // 기존에 있는건 업데이트 하도록
             }
 
-            System.out.println(results);
-            log.info("{}", results.size());
-            return results;
+            log.info("{}", user.getBlogs().size());
+            return user;
         };
     }
 
-    public JpaItemWriter<List<Blog>> writerList() {
+    public JpaItemWriter<User> writerList() {
         log.info("********** This is " + JOB_NAME + "_writer");
 
-        JpaItemWriter<Blog> writer = new JpaItemWriter<>();
+        JpaItemWriter<User> writer = new JpaItemWriter<>();
         writer.setEntityManagerFactory(entityManagerFactory);
 
-        return new JpaItemListWriter<>(writer);
+        return writer;
     }
 
     private List<Blog> buildBlogList(User user){

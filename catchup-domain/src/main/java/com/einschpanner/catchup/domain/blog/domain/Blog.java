@@ -40,7 +40,7 @@ public class Blog extends BaseTimeEntity {
     @Column
     private LocalDateTime publishedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
