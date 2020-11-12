@@ -81,4 +81,9 @@ public class User extends BaseTimeEntity {
 
         return this;
     }
+
+    public void addBlog(Blog blog){
+        this.blogs.add(blog);
+        blog.updateUser(this);
+    }
 }

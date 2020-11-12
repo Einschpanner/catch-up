@@ -1,7 +1,9 @@
 package com.einschpanner.catchup.batch.jobs;
 
-import com.einschpanner.catchup.batch.common.writer.JpaItemListWriter;
+import com.einschpanner.catchup.batch.common.reader.QuerydslPagingItemReader;
 import com.einschpanner.catchup.domain.blog.domain.Blog;
+import com.einschpanner.catchup.domain.blog.domain.QBlog;
+import com.einschpanner.catchup.domain.user.dao.UserRepository;
 import com.einschpanner.catchup.domain.user.domain.User;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -20,12 +22,12 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
-import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -34,6 +36,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.einschpanner.catchup.domain.user.domain.QUser.user;
+import static com.einschpanner.catchup.domain.blog.domain.QBlog.blog;
 
 /**
  * Ref : https://ahndy84.tistory.com/19?category=339592
@@ -71,8 +76,10 @@ public class BlogRssParserConfig {
 
     @Bean(name = STEP_NAME)
     @JobScope
+    @Transactional
     public Step step() {
         log.info("********** This is " + STEP_NAME);
+
         return stepBuilderFactory.get(STEP_NAME)
                 .<User, User>chunk(chunkSize)
                 .reader(reader())
@@ -83,26 +90,21 @@ public class BlogRssParserConfig {
 
     @Bean
     @StepScope
-    public JpaPagingItemReader<User> reader() {
+    @Transactional
+    public QuerydslPagingItemReader<User> reader() {
         log.info("********** This is " + JOB_NAME + "_reader");
 
-        final String query =
-                "SELECT u " +
-                "FROM User u " +
-                "LEFT JOIN FETCH u.blogs " +
-                "WHERE u.addrRss IS NOT NULL " +
-                "ORDER BY u.userId";
-
-        JpaPagingItemReader<User> reader = new JpaPagingItemReader<>();
-        reader.setName("reader");
-        reader.setEntityManagerFactory(entityManagerFactory);
-        reader.setPageSize(chunkSize);
-        reader.setQueryString(query);
-
-        return reader;
+        return new QuerydslPagingItemReader<>(entityManagerFactory, chunkSize, queryFactory ->
+                queryFactory.selectFrom(user)
+                        .leftJoin(user.blogs, blog)
+                        .fetchJoin()
+                        .where(user.addrRss.isNotNull())
+                        .orderBy(user.userId.asc())
+        );
     }
 
     // 비즈니스 로직
+    @Transactional
     public ItemProcessor<User, User> processor() {
         return user -> {
             log.info("********** This is " + JOB_NAME + "_processor");
@@ -119,7 +121,7 @@ public class BlogRssParserConfig {
             for (Blog newBlog : newBlogs) {
                 String link = newBlog.getLink();
                 Blog exists = map.get(link);
-                if (exists == null) user.getBlogs().add(newBlog);
+                if (exists == null) user.addBlog(newBlog);
                 else exists.update(newBlog); // 기존에 있는건 업데이트 하도록
             }
 
@@ -128,12 +130,12 @@ public class BlogRssParserConfig {
         };
     }
 
+    @Transactional
     public JpaItemWriter<User> writerList() {
         log.info("********** This is " + JOB_NAME + "_writer");
 
         JpaItemWriter<User> writer = new JpaItemWriter<>();
         writer.setEntityManagerFactory(entityManagerFactory);
-
         return writer;
     }
 

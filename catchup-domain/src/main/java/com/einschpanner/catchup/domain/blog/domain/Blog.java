@@ -51,4 +51,8 @@ public class Blog extends BaseTimeEntity {
         this.publishedDate = blog.getPublishedDate();
         return this;
     }
+
+    public void updateUser(User user){
+        this.user = user;
+    }
 }
