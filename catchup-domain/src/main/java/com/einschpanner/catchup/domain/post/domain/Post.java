@@ -1,7 +1,7 @@
 package com.einschpanner.catchup.domain.post.domain;
+
 import com.einschpanner.catchup.domain.BaseTimeEntity;
 import com.einschpanner.catchup.domain.post.dto.PostDto;
-import com.einschpanner.catchup.domain.tag.domain.Tag;
 import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.*;
 
@@ -41,18 +41,19 @@ public class Post extends BaseTimeEntity {
 
     @Column
     @Setter
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @Setter
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "tagId")
-    private List<Tag> tags;
+    @OneToMany(mappedBy = "post")
+    private List<PostTag> postTags;
 
     /**
      * Update Dto to Post
+     *
      * @param dto
      */
     public void updateMyPost(PostDto.UpdateReq dto) {
@@ -62,7 +63,7 @@ public class Post extends BaseTimeEntity {
         this.urlThumbnail = dto.getUrlThumbnail();
         this.cntLike = dto.getCntLike();
         this.cntComment = dto.getCntComment();
-        this.isDeleted = dto.isDeleted();
+        this.isDeleted = dto.getIsDeleted();
     }
 
     public void plusCommentCnt() {
@@ -72,6 +73,7 @@ public class Post extends BaseTimeEntity {
     public void minusCommentCnt() {
         this.cntComment--;
     }
+
     public void plusLikeCnt() {
         this.cntLike++;
     }
@@ -80,5 +82,8 @@ public class Post extends BaseTimeEntity {
         this.cntLike--;
     }
 
+    public boolean isNotOwner(User user){
+        return !this.user.getUserId().equals(user.getUserId());
+    }
 }
 

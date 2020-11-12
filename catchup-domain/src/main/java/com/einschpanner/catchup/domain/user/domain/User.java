@@ -82,8 +82,24 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
-    public void addBlog(Blog blog){
+    public void addBlog(Blog blog) {
         this.blogs.add(blog);
         blog.updateUser(this);
+    }
+
+    public void plusFollowerCount(){
+        this.cntFollower++;
+    }
+
+    public void minusFollowerCount(){
+        this.cntFollower--;
+    }
+
+    public void plusFollowingCount(){
+        this.cntFollowing++;
+    }
+
+    public void minusFollowingCount(){
+        this.cntFollowing--;
     }
 }

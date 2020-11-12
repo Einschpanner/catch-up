@@ -1,12 +1,13 @@
 package com.einschpanner.catchup.domain.tag.domain;
 
-import com.einschpanner.catchup.domain.post.domain.Post;
+import com.einschpanner.catchup.domain.post.domain.PostTag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "T_TAG")
@@ -20,11 +21,11 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tagId;
 
-    @ManyToOne
-    @JoinColumn(name = "postId")
-    private Post post;
-
-    @Column(nullable = false, length = 30)
+    @Column
     private String tagName;
+
+    @OneToMany(mappedBy = "tag")
+    private List<PostTag> postTags;
+
 }
 

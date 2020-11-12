@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.post.controller;
+package com.einschpanner.catchup.post.api;
 
 import com.einschpanner.catchup.post.service.PostCommentService;
 import com.einschpanner.catchup.domain.post.domain.PostComment;
