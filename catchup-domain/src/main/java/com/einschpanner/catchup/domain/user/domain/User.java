@@ -3,7 +3,10 @@ package com.einschpanner.catchup.domain.user.domain;
 import com.einschpanner.catchup.domain.BaseTimeEntity;
 import com.einschpanner.catchup.domain.blog.domain.Blog;
 import com.einschpanner.catchup.domain.user.dto.ProfileDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class User extends BaseTimeEntity {
 
     @Id
@@ -56,7 +58,8 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany
+    @JoinColumn(name = "userId")
     private List<Blog> blogs;
 
     public String getRolekey() {
@@ -82,8 +85,19 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
-    public void addBlog(Blog blog){
-        this.blogs.add(blog);
-        blog.updateUser(this);
+    public void plusFollowerCount(){
+        this.cntFollower++;
+    }
+
+    public void minusFollowerCount(){
+        this.cntFollower--;
+    }
+
+    public void plusFollowingCount(){
+        this.cntFollowing++;
+    }
+
+    public void minusFollowingCount(){
+        this.cntFollowing--;
     }
 }

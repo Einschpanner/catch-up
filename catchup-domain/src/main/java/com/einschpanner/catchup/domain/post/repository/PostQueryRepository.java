@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.domain.post.dao;
+package com.einschpanner.catchup.domain.post.repository;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.domain.PostComment;

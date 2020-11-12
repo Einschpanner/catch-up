@@ -1,10 +1,10 @@
 package com.einschpanner.catchup.domain.blog.domain;
 
-import com.einschpanner.catchup.domain.BaseTimeEntity;
-import com.einschpanner.catchup.domain.user.domain.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class)
-public class Blog extends BaseTimeEntity {
+public class Blog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,31 +27,18 @@ public class Blog extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, unique = true)
-    private String link;
+    @Column(nullable = false)
+    private String email;
 
-    @Column
-    private int cntLike;
+    @Column(nullable = false)
+    private String link;
 
     @Column
     private String urlThumbnail;
 
     @Column
-    private LocalDateTime publishedDate;
+    private int cntLike;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private User user;
-
-    public Blog update(Blog blog){
-        this.title = blog.getTitle();
-        this.description = blog.getDescription();
-        this.urlThumbnail = blog.getUrlThumbnail();
-        this.publishedDate = blog.getPublishedDate();
-        return this;
-    }
-
-    public void updateUser(User user){
-        this.user = user;
-    }
+    @CreatedDate
+    private LocalDateTime createdDate;
 }
