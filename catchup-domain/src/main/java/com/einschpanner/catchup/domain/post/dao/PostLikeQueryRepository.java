@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.domain.post.repository;
+package com.einschpanner.catchup.domain.post.dao;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.einschpanner.catchup.domain.post.domain.PostLike;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.einschpanner.catchup.domain.post.domain.QPostLike.postLike;
-import static com.einschpanner.catchup.domain.post.domain.QPost.post;
 
 
 /**

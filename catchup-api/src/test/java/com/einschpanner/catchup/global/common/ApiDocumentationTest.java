@@ -1,20 +1,13 @@
 package com.einschpanner.catchup.global.common;
 
-import com.einschpanner.catchup.domain.post.repository.PostQueryRepository;
-import com.einschpanner.catchup.domain.post.repository.PostTagQueryRepository;
-import com.einschpanner.catchup.follow.api.FollowController;
-import com.einschpanner.catchup.follow.service.FollowService;
+import com.einschpanner.catchup.domain.post.dao.PostQueryRepository;
 import com.einschpanner.catchup.global.common.config.TestConfig;
 import com.einschpanner.catchup.global.security.config.SecurityConfig;
 import com.einschpanner.catchup.global.security.controller.AuthController;
-import com.einschpanner.catchup.post.api.PostCommentController;
-import com.einschpanner.catchup.post.api.PostController;
-import com.einschpanner.catchup.post.api.PostLikeController;
-import com.einschpanner.catchup.post.api.PostTagController;
+import com.einschpanner.catchup.post.controller.PostCommentController;
+import com.einschpanner.catchup.post.controller.PostController;
 import com.einschpanner.catchup.post.service.PostCommentService;
-import com.einschpanner.catchup.post.service.PostLikeService;
 import com.einschpanner.catchup.post.service.PostService;
-import com.einschpanner.catchup.post.service.PostTagService;
 import com.einschpanner.catchup.user.api.UserController;
 import com.einschpanner.catchup.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,11 +28,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = {
         AuthController.class,
         PostController.class,
-        PostLikeController.class,
-        FollowController.class,
         PostCommentController.class,
-        UserController.class,
-        PostTagController.class
+        UserController.class
 },
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
@@ -65,20 +55,8 @@ public abstract class ApiDocumentationTest {
     protected PostQueryRepository postQueryRepository;
 
     @MockBean
-    protected PostLikeService postLikeService;
-
-    @MockBean
-    protected FollowService followService;
-
-    @MockBean
     protected PostCommentService postCommentService;
   
     @MockBean
     protected UserService userService;
-
-    @MockBean
-    protected PostTagService postTagService;
-
-    @MockBean
-    protected PostTagQueryRepository postTagQueryRepository;
 }
