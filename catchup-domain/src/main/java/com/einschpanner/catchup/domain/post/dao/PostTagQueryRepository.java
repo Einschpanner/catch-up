@@ -1,4 +1,4 @@
-package com.einschpanner.catchup.domain.post.repository;
+package com.einschpanner.catchup.domain.post.dao;
 
 import com.einschpanner.catchup.domain.post.domain.PostTag;
 import com.querydsl.jpa.impl.JPAQueryFactory;

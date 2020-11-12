@@ -2,9 +2,9 @@ package com.einschpanner.catchup.post.service;
 
 import com.einschpanner.catchup.domain.post.domain.Post;
 import com.einschpanner.catchup.domain.post.domain.PostLike;
-import com.einschpanner.catchup.domain.post.repository.PostLikeQueryRepository;
-import com.einschpanner.catchup.domain.post.repository.PostLikeRepository;
-import com.einschpanner.catchup.domain.post.repository.PostRepository;
+import com.einschpanner.catchup.domain.post.dao.PostLikeQueryRepository;
+import com.einschpanner.catchup.domain.post.dao.PostLikeRepository;
+import com.einschpanner.catchup.domain.post.dao.PostRepository;
 import com.einschpanner.catchup.domain.user.dao.UserRepository;
 import com.einschpanner.catchup.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;

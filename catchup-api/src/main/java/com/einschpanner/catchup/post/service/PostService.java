@@ -1,12 +1,12 @@
 package com.einschpanner.catchup.post.service;
 
+import com.einschpanner.catchup.domain.post.dao.PostRepository;
+import com.einschpanner.catchup.domain.post.domain.Post;
+import com.einschpanner.catchup.domain.post.dto.PostDto;
 import com.einschpanner.catchup.domain.user.dao.UserRepository;
 import com.einschpanner.catchup.domain.user.domain.User;
 import com.einschpanner.catchup.post.exception.PostAccessDeniedException;
 import com.einschpanner.catchup.post.exception.PostNotFoundException;
-import com.einschpanner.catchup.domain.post.domain.Post;
-import com.einschpanner.catchup.domain.post.dto.PostDto;
-import com.einschpanner.catchup.domain.post.repository.PostRepository;
 import com.einschpanner.catchup.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

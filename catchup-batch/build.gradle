@@ -1,18 +1,16 @@
-plugins {
-    id 'java'
-}
-
-version 'unspecified'
-
-repositories {
-    mavenCentral()
-}
-bootJar {
-    enabled = false
-}
-jar {
-    enabled = true
-}
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    runtime 'mysql:mysql-connector-java'
+
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+    // RSS XML parser library
+    implementation 'rome:rome:1.0'
+
+    // jsoup HTML parser library @ https://jsoup.org/
+    implementation 'org.jsoup:jsoup:1.13.1'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.batch:spring-batch-test'
+
+    compile project(':catchup-domain')
 }

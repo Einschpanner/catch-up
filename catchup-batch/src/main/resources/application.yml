@@ -1,14 +1,17 @@
 spring:
-  profiles:
-    include: oauth
+
+  main:
+    web-application-type: none
+
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        show-sql: false
         format_sql: true
+#        default_batch_fetch_size: 1000
+    show-sql: false
 
   datasource:
     url: jdbc:mysql://ec2-13-209-26-139.ap-northeast-2.compute.amazonaws.com:3306/catchup-dev?serverTimezone=UTC&autoReconnection=true
@@ -16,11 +19,13 @@ spring:
     password: catchup!@
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  security:
-    user:
-      name: admin
-      password: admin
+  batch:
+    job:
+      names: ${job.name:NONE}
 
 logging:
   level:
-    root: info
+    org.springframework:
+      batch.item.database: debug
+    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
