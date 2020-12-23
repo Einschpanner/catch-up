@@ -34,7 +34,7 @@ public class Blog extends BaseTimeEntity {
     @Column
     private int cntLike;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String urlThumbnail;
 
     @Column

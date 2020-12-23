@@ -14,9 +14,9 @@ spring:
     show-sql: false
 
   datasource:
-    url: jdbc:mysql://ec2-13-209-26-139.ap-northeast-2.compute.amazonaws.com:3306/catchup-dev?serverTimezone=UTC&autoReconnection=true
+    url: jdbc:mysql://ec2-3-35-17-62.ap-northeast-2.compute.amazonaws.com:3306/catchup-dev?serverTimezone=UTC&autoReconnection=true
     username: root
-    password: catchup!@
+    password: habitbread!!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   batch:
@@ -25,6 +25,7 @@ spring:
 
 logging:
   level:
+    com.einschpanner.catchup.batch: debug
     org.springframework:
       batch.item.database: debug
     org.hibernate.SQL: debug
